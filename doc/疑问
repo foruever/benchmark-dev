@@ -1,0 +1,28 @@
+### 精于属于自己的核心业务，注意协作
+
+1,graphite 如何修改导入时候的时间戳为  时间戳精度为ms的，而不是s的     ####
+
+每个whisper数据库可以包含一个或者多个针对不同数据的采集和存储策略的定义。这些定义保存在graphite安装路径下的conf/ storage-schemas.conf配置文件里面：
+[name]
+pattern = regex
+retentions = timePerPoint:timeToStore, timePerPoint:timeToStore, ...
+name：策略名称，可随意指定
+pattern：用来匹配具体指标名的正则表达式。如果配置文件里面定义了多个策略，那么收到一个指标数据的时候，会从上到下使用每个策略里面的pattern对指标名称进行正则表达式匹配，最先匹配到的策略将会被使用。
+
+
+retentions：定义了数据采集精度和存储时长。timePerPoint就是多长时间采集一个数据点，timeToStore就是采集的数据最长存储多长时间。每个retentions后面可以定义多个timePerPoint:timeToStore对。每个timePerPoint:timeToStore对按高精度短时长到低精度长时长进行排序。比如：retentions = 15s:7d,1m:21d,15m:5y
+上面的retentions包含了三个timePerPoint:timeToStore对，分别是15秒采集一个数据点，保存7天的数据，1分钟采集一个数据点，保存21天的数据和15分钟采集一个数据点，保存5年的数据。为了能准确地从高精度数据转换到低精度数据，两个相邻的timePerPoint:timeToStore对定义必须满足低精度定义能被高精度定义整除这个条件。比如上面的1m:21d就能被15s:7d整除，因为1分钟能被15秒整除，而21天可以被7天整除。相反，每180秒采集一次数据的定义就不能被每300秒采集一次数据的定义整除，因为300不能被180整除。
+所以把s修改成ms就可以了
+## ps 精度不支持ms
+
+
+2,graphite 有没有直接的数据导入的命令   直接导入一个txt的文件或者导入文件的web接口，######可以用程序计算导入时间，以及每秒的导入大小(包含其他的数据库)
+
+直接导入其实就是一下加载多条，可以先放到内存中，最后一次性导入
+
+3,graphite 如何查看压缩后的文件大小
+ graphite 压缩后的就是  *.wsp 的大小
+
+
+root@sxg-virtual-machine:/usr/bin# ./whisper-dump /var/lib/graphite/whisper/ruc_perform_test/ruc_test/location/haidian.wsp 
+

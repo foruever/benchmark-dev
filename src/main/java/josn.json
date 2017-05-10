@@ -1,0 +1,20 @@
+{
+    "schema": [
+        {
+            "measurement_id": "sensor_1",
+            "data_type": "FLOAT",
+            "encoding": "RLE"
+        },
+        {
+            "measurement_id": "sensor_2",
+            "data_type": "INT32",
+            "encoding": "TS_2DIFF"
+        },
+        {
+            "measurement_id": "sensor_3",
+            "data_type": "INT32",
+            "encoding": "TS_2DIFF"
+        }
+    ],
+    "row_group_size": 134217728
+}

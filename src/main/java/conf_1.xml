@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records><!-- 这是根标签 一定要有的，否则无法执行程序 -->
+	<csvPath value="E://1-data/data.csv"/>  <!-- 选择数据生成路径  没有该标签的话 默认为和jar包同一个路径 名字为 bigdata_时间戳.csv -->
+	<generateLine value="10000"/> <!-- 生成数据行数，没有该标签默认为10W行 -->
+	<!-- <lineSeparator value=","/> --><!-- 分隔符 ，没有该标签默认为逗号, -->
+	<!-- record标签用来定义生成记录的格式
+		属性介绍
+		1,name:表示这个record名称 -方便使用者标记每个标签的用处
+		2,active:true,表示该record处于使用状态(此时生成数据按照这个record格式进行数据生成);false,表示该record处于非激活状态
+	 -->
+	<record name="metric" active="false">
+		<!--column标签用于定义该列的数据格式 
+			属性介绍
+			1,name: 非必填,与record的name属性功能一直，仅仅用于标识
+			2,type: 必填, 表示该列数据对应的数据类型 有
+				2.1 string 表示为字符串类型,目前仅支持自定义 value中设置定义值,无value值默认为'default';
+				2.2 int 表示整数型 目前仅支持int不支持long;
+				2.3 float 表示浮点型;
+				2.4 timestamp 表示时间戳类型 精确到毫秒+000000;
+				2.5 key-value 表示数据格式为key=value类型的  比如cpu=core-i7;
+			3,value: 非必填, 该字段值 string,int,float的默认值，其他type类型无效
+			4,function-type:非必填  数据生成函数形式 对于key-value类型无效(key-value子标签对应相应的函数方式) 默认为random
+				4.1 random-function  随机选择一个函数;
+				4.2 random 在min和max范围中随机选择一个书random 其中random满足   random>=min&&random<max;
+				4.3 broken-line 锯齿波
+				4.4 square-line 方波
+				4.5 sine-line 正弦曲线
+				4.6 mono-rise 单调上升斜率唯一函数
+				4.7 mono-decrease 单调下降斜率唯一函数
+				4.8 parabola-up-line 抛物线开口向上函数
+				4.9 parabola-down-line 抛物线开口向下函数
+				4.10 log-line log函数
+				4.11 expon-line 指数函数
+			5,min: 非必填,最小值  仅支持数值型  int,float
+			6,max: 非必填,最大值  仅支持数值型  int,float
+			注:type为key-value类型的  必须要有子标签<key></key> <value></value>,子标签书写方式与column相同,type属性没有key-value类型
+			注:当value值存在时，function-type,min,max设置无效
+			注:当function-type为random类型时,可以合理利用min,max控制随机数范围
+		 -->
+		<column name="path"  type="string" ></column>
+		<column name="value"  type="int"></column>
+		<column name="timestamp"  type="timestamp"></column>
+	</record>
+	<record name="metric_opentsdb" active="false">
+		<column name="path"  type="string" ></column>
+		<column name="timestamp" type="timestamp"></column>
+		<column name="value" type="int"></column>
+		<column name="host" type="key-value"></column>
+		<column name="cpu" type="key-value">
+			<key type="string"></key>
+			<value type="int"></value>
+		</column>
+	</record>
+	<record name="metric_opentsdb" active="true"><!-- active=false的话 则该记录不启用 -->
+		<column name="path"  type="string" value="mymertric.test.data"></column>
+		<column name="timestamp" type="timestamp"></column>
+		<column name="value" type="float" function-type="random" min="-1" max="1"></column>
+		<column name="host" type="key-value">
+			<key type="string" value="host"></key>
+			<value type="string" value="xyd_host" ></value>
+		</column>
+<!-- 		<column name="brokenLine" type="int" function-type="broken-line"></column>
+		<column name="squareLine" type="int" function-type="square-line"></column>
+		<column name="monoRiseLine" type="int" function-type="mono-rise"></column>
+		<column name="monoDecrease" type="int" function-type="mono-decrease"></column>
+		<column name="sin" type="string" value="sin"></column>
+		<column name="sineLine" type="int" function-type="sine-line"></column>
+		<column name="key-value-test" type="key-value" >
+			<key type="string" value="temptrue"></key>
+			<value type="int" function-type=""></value>
+		</column> -->
+		<column name="brokenLine" type="float" function-type="broken-line"></column>
+		<column name="squareLine" type="float" function-type="square-line"></column>
+		<column name="monoRiseLine" type="float" function-type="mono-rise"></column>
+		<column name="monoDecrease" type="float" function-type="mono-decrease"></column>
+		<column name="sin" type="string" value="sin"></column>
+		<column name="sineLine" type="float" function-type="sine-line"></column>
+		<column name="key-value-test" type="key-value" >
+			<key type="string" value="temptrue"></key>
+			<value type="float" function-type="sine-line"></value>
+		</column>
+<!-- 		<column name="cpu" type="key-value">
+			<key type="string" value="core"></key>
+			<value type="unsigned-int" ></value>
+		</column> -->
+	</record>
+</records>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  	<config mode="online" serverUrl="http://192.168.241.128:4242/" dbtype="opentsdb">  -->
+<!--  	<config mode="online" serverUrl="http://192.168.241.128:8086" dbtype="influxdb">  -->
+<!--  	<config mode="online" serverUrl="192.168.241.130:2003" dbtype="graphite">  -->
+ 	<config mode="online" serverUrl="192.168.241.130:2003" dbtype="tsfile"> 
+		<opentsdbs>
+			 <!-- 正弦周期 -->
+			 <opentsdbRecord metric="mymertic.test.data.test5" startDate="2017-01-01 00:10:00" endDate="2017-04-13 00:05:18" step="100" cacheLine="100">
+			 	<tags>
+			 		<tag key="taga" value="tagaValue"></tag>
+			 		<tag key="tagb" value="tagbValue"></tag>
+			 	</tags>
+			 	<value type="float"  function-type="sine-line" coeA="10000" coeB="0.00001" coeC="0" coeD="10000"></value>
+			 </opentsdbRecord>
+			 <!-- 单调周期 -->
+			 <opentsdbRecord type="opentsdb" metric="mymertic.test.data.test2" startDate="2017-01-01 00:10:00" endDate="2017-04-07 00:40:18" step="8" cacheLine="1000">
+			 	<tags>
+			 		<tag key="taga" value="tagaValue"></tag>
+			 		<tag key="tagb" value="tagbValue"></tag>
+			 	</tags>
+			 	<value type="float"  function-type="mono-rise" coeA="1000" coeB="0.1"  coeT="100000"></value>
+			 </opentsdbRecord>
+			 <!-- 对数周期 -->
+			 <opentsdbRecord type="opentsdb" metric="mymertic.test.data.test3" startDate="2017-01-01 00:10:00" endDate="2017-04-07 00:50:18" step="12" cacheLine="200">
+			 	<tags>
+			 		<tag key="taga" value="tagaValue"></tag>
+			 		<tag key="tagb" value="tagbValue"></tag>
+			 	</tags>
+			 	<value type="float"  function-type="log-line" coeA="1" coeB="0.01" coeC="0" coeT="100000"></value>
+			 </opentsdbRecord>
+			 <!-- 指数周期 -->
+			 <opentsdbRecord type="opentsdb" metric="mymertic.test.data.test4" startDate="2017-01-01 00:10:00" endDate="2017-04-07 01:00:18" step="12" cacheLine="2000">
+			 	<tags>
+			 		<tag key="taga" value="tagaValue"></tag>
+			 		<tag key="tagb" value="tagbValue"></tag>
+			 	</tags>
+			 	<value type="float"  function-type="expon-line" coeA="1" coeB="0.0000001" coeC="0" coeT="100000"></value>
+			 </opentsdbRecord>
+			 <!-- 抛物线周期 -->
+			 <opentsdbRecord type="opentsdb" metric="mymertic.test.data.test5" startDate="2017-01-01 00:10:00" endDate="2017-04-07 01:49:18" step="1" cacheLine="200">
+			 	<tags>
+			 		<tag key="taga" value="tagaValue"></tag>
+			 		<tag key="tagb" value="tagbValue"></tag>
+			 	</tags>
+			 	<value type="float" function-type="parabola-up-line" coeA="0.00001" coeB="0"  coeT="100000"></value>
+			 </opentsdbRecord>
+		</opentsdbs>
+		 <influxdbs>
+			 <influxdbRecord dbName="hei" measurement="cpu" startDate="2017-01-01 00:10:00" endDate="2017-04-12 01:12:00" step="10" cacheLine="1000">
+			 	<tags>
+			 		<tag key="taga" value="tagaValue"></tag>
+			 		<tag key="tagb" value="tagbValue"></tag>
+			 	</tags>
+			 	<fields>
+			 		<field>
+			 			<key>temprature</key>
+			 			<value type="float" function-type="parabola-up-line" coeA="0.00001" coeB="0"  coeT="100000"></value>
+			 		</field>
+			 		<field>
+			 			<key>fengli</key>
+			 			<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+			 		</field>
+			 	</fields>
+			 </influxdbRecord>
+			 <influxdbRecord dbName="hei" measurement="memory" startDate="2017-01-01 00:10:00" endDate="2017-04-12 01:12:00" step="100" cacheLine="1000">
+			 	<tags>
+			 		<tag key="taga" value="tagaValue"></tag>
+			 		<tag key="tagb" value="tagbValue"></tag>
+			 	</tags>
+			 	<fields>
+			 		<field>
+			 			<key>temprature</key>
+			 			<value type="float" function-type="parabola-up-line" coeA="0.00001" coeB="0"  coeT="100000"></value>
+			 		</field>
+			 		<field>
+			 			<key>fengli</key>
+			 			<value type="int"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+			 		</field>
+			 	</fields>
+			 </influxdbRecord>
+		 </influxdbs>
+		 <graphites>
+			 <graphiteRecord path="test.tempature.beijing" startDate="2017-01-01 00:10:00" endDate="2017-04-20 12:10:00" step="1000" cacheLine="10">
+			 	<value type="int" custom="true" function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="1000"></value>
+			 </graphiteRecord>
+			 <graphiteRecord path="test.tempature.shanghai" startDate="2017-01-01 00:10:00" endDate="2017-04-20 12:10:00" step="1000" cacheLine="10">
+			 	<value type="int" custom="true" function-type="mono-rise" coeA="1" coeB="10000" coeT="100000"></value>
+			 </graphiteRecord>
+		 </graphites>
+		<tsfiles>
+			<tsfileRecord deltaObjectId="device_1" startDate="2017-01-01 00:10:00" endDate="2017-04-30 12:10:00" step="1" cacheLine="10000" tsFilePath="F://g.ts">
+				<sensors>
+					<sensor>
+				 		<key>sensor_1</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_2</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_3</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				</sensors>
+			</tsfileRecord>
+			<tsfileRecord deltaObjectId="device_2" startDate="2017-01-01 00:10:00" endDate="2017-04-30 12:10:00" step="1" cacheLine="10000" tsFilePath="F://g.ts">
+				<sensors>
+					<sensor>
+				 		<key>sensor_1</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_2</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_3</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				</sensors>
+			</tsfileRecord>
+			<tsfileRecord deltaObjectId="device_3" startDate="2017-01-01 00:10:00" endDate="2017-04-30 12:10:00" step="1" cacheLine="10000" tsFilePath="F://g.ts">
+				<sensors>
+					<sensor>
+				 		<key>sensor_1</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_2</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_3</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				</sensors>
+			</tsfileRecord>
+			<tsfileRecord deltaObjectId="device_4" startDate="2017-01-01 00:10:00" endDate="2017-04-30 12:10:00" step="1" cacheLine="10000" tsFilePath="F://g.ts">
+				<sensors>
+					<sensor>
+				 		<key>sensor_1</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_2</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				 	<sensor>
+				 		<key>sensor_3</key>
+				 		<value type="float"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></value>
+				 	</sensor>
+				</sensors>
+			</tsfileRecord>
+		</tsfiles>
+	</config>

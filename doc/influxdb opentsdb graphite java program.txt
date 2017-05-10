@@ -1,0 +1,13 @@
+influxdb java编程
+https://github.com/ivanscattergood/influxdb-java
+http://carlhembrough.com/uncategorized/getting-started-with-influxdb-using-java/
+
+graphite java编程
+https://github.com/zanox/simplegraphiteclient
+
+opentsdb编程
+http://www.kalyanhadooptraining.com/2014/08/opentsdb-and-hbase-rough-performance.html
+这个网址需要翻墙
+https://github.com/arganzheng/opentsdb-java-client/tree/master/src/test/java/org/opentsdb/client
+
+

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records><!-- 这是根标签 一定要有的，否则无法执行程序 -->
+<!-- 	<baseConfig mode="online"> -->
+<!-- 		<database type="opentsdb"></database>1,opentsdb 2,graphite 3,influxdb -->
+<!-- 		<linkurl value="http://192.168.241.128:4242/"></linkurl>openapi的根链接 比如 http://192.168.241.128:4242/ -->
+<!-- 		<cacheline value="1"></cacheline>缓存行数 :多少行数入库(flush)一次 -->
+<!-- 	</baseConfig> -->
+	<!-- 
+		value:生成方式   默认不生成，1,date:按照开始和结束日期范围内 生成数据;2:online:实时生成;3:line:按照行数 已经废弃不建议使用；
+		ps:online模式，默认并行生成数据,有多少个record默认多少个线程
+		datebase:1,opentsdb 2,graphite 3,influxdb
+		serverUrl:openapi服务器路径 eg. http://192.168.241.128:4242/
+		cacheline:缓存行数 :多少行数入库(flush)一次
+	-->
+	<generateType value="date" datebase="opentsdb" serverUrl="http://192.168.241.128:4242/" cacheline="1"/>
+	<!-- <csvPath value="E://1-data/data_2.txt"/> -->  <!-- 选择数据生成路径  没有该标签的话 默认为和jar包同一个路径 名字为 bigdata_时间戳.csv -->
+	<!-- 生成数据行数，没有该标签默认为10W行   已经废弃，不建议使用-->
+	<!-- <generateLine value="10000"/>  -->
+	<!-- date模式:模拟时间的的开始时间，结束时间，step步长(ms)默认为1000(数据采集间隔),
+		 online模式:则startDate默认为系统当前时间(设置无效)，endDate为程序生成数据结束时间 step为数据采集间隔-->
+	<generateDate startDate="2017-01-01 00:00:00" endDate="2017-05-02 00:00:00" step="6000"/>
+	 <!--date模式需要配置 , 分隔符 :没有该标签默认为逗号, -->
+	<lineSeparator value=""/>
+	<!-- record标签用来定义生成记录的格式
+		属性介绍
+		1,name:表示这个record名称 -方便使用者标记每个标签的用处  必填，唯一不可重复
+		2,active:true,表示该record处于使用状态(此时生成数据按照这个record格式进行数据生成);false,表示该record处于非激活状态
+	 -->
+	 
+	<record name="metric" active="false">
+		<!--column标签用于定义该列的数据格式 
+			属性介绍
+			1,name: 非必填,与record的name属性功能一直，仅仅用于标识
+			2,type: 必填, 表示该列数据对应的数据类型 有
+				2.1 string 表示为字符串类型,目前仅支持自定义 value中设置定义值,无value值默认为'default';
+				2.2 int 表示整数型 目前仅支持int不支持long;
+				2.3 float 表示浮点型;
+				2.4 timestamp 表示时间戳类型 精确到毫秒+000000;
+				2.5 key-value 表示数据格式为key=value类型的  比如cpu=core-i7;
+			3,value: 非必填, 该字段值 string,int,float的默认值，其他type类型无效
+			4,function-type:非必填  数据生成函数形式 对于key-value类型无效(key-value子标签对应相应的函数方式) 默认为random
+				如果参数自定义  则带上 custom="true"标签
+				4.1 random-function  随机选择一个函数;
+				4.2 random 在min和max范围中随机选择一个书random 其中random满足   random>=min&&random<max;
+				4.3 broken-line 锯齿波    参数 coeA:周期，毫秒;coeB:最小值;coeC:最大值
+				4.4 square-line 方波   参数coeA:周期，毫秒;coeB:最小值;coeC:最大值
+				4.5 sine-line 正弦曲线 Asin(B*X+C)+D 参数 coeA:A;coeB:B;coeC:C;coeD:D;
+				4.6 mono-rise 单调上升斜率唯一函数   A*x+B  参数coeA:A;coeB:B
+				4.7 mono-decrease 单调下降斜率唯一函数 A*x+B  参数coeA:A;coeB:B
+				4.8 parabola-up-line 抛物线开口向上函数 A*x2+B 参数coeA:A;coeB:B
+				4.9 parabola-down-line 抛物线开口向下函数  A*x2+B 参数coeA:A;coeB:B
+				4.10 log-line log函数 A*Log(B*x)+C  参数coeA:A;参数coeB:B;参数coeC:C
+				4.11 expon-line 指数函数  Ae(B*x)+C  参数coeA:A;参数coeB:B;参数coeC:C
+			5,min: 非必填,最小值  仅支持数值型  int,float
+			6,max: 非必填,最大值  仅支持数值型  int,float
+			注:type为key-value类型的  必须要有子标签<key></key> <value></value>,子标签书写方式与column相同,type属性没有key-value类型
+			注:当value值存在时，function-type,min,max设置无效
+			注:当function-type为random类型时,可以合理利用min,max控制随机数范围
+		 -->
+		<column name="path"  type="string" value="carbon.agents.graphite-tutorial.metricsReceived" ></column>
+		<column name="value"  type="int" function-type="random" min="-1000000" max="1000000"></column>
+		<column name="timestamp" type="timestamp"></column>
+	</record>
+	<record name="metric_opentsdb" active="false">
+		<column name="path"  type="string" ></column>
+		<column name="timestamp" type="timestamp"></column>
+		<column name="value" type="int"></column>
+		<column name="host" type="key-value"></column>
+		<column name="cpu" type="key-value">
+			<key type="string"></key>
+			<value type="int"></value>
+		</column>
+	</record>
+	<record name="metric_opentsdb" active="false"><!-- active=false的话 则该记录不启用 -->
+		<column name="path"  type="string" value="mymertric.test.data4"></column>
+		<column name="timestamp" type="timestamp"></column>
+		<column name="value" type="int" custom="true" function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="1000" ></column> 
+		<!-- <column name="value" type="int" custom="true" function-type="parabola-up-line" coeA="0.0001" coeB="10000"  ></column> -->
+		<column name="host" type="key-value">
+			<key type="string" value="host">
+			</key>
+			<value type="string" value="xyd_host" ></value>
+		</column>
+<!-- 		<column name="brokenLine" type="int" function-type="broken-line"></column>
+		<column name="squareLine" type="int" function-type="square-line"></column>
+		<column name="monoRiseLine" type="int" function-type="mono-rise"></column>
+		<column name="monoDecrease" type="int" function-type="mono-decrease"></column>
+		<column name="sin" type="string" value="sin"></column>
+		<column name="sineLine" type="int" function-type="sine-line"></column>
+		<column name="key-value-test" type="key-value" >
+			<key type="string" value="temptrue"></key>
+			<value type="int" function-type=""></value>
+		</column> -->
+		<!--<column name="brokenLine" type="float" function-type="broken-line"></column>
+		<column name="squareLine" type="float" function-type="square-line"></column>
+		<column name="monoRiseLine" type="float" function-type="mono-rise"></column>
+		<column name="monoDecrease" type="float" function-type="mono-decrease"></column>
+		<column name="sin" type="string" value="sin"></column>
+		<column name="sineLine" type="float" function-type="sine-line"></column>
+		<column name="key-value-test" type="key-value" >
+			<key type="string" value="temptrue"></key>
+			<value type="float" function-type="sine-line"></value>
+		</column>-->
+<!-- 		<column name="cpu" type="key-value">
+			<key type="string" value="core"></key>
+			<value type="unsigned-int" ></value>
+		</column> -->
+	</record>
+	<record name="metric_opentsdb_2" active="false"><!-- active=false的话 则该记录不启用 -->
+		<column name="path"  type="string" value="mymertric.test.data.mono"></column>
+		<column name="timestamp" type="timestamp"></column>
+		<column name="value" type="int" function-type="mono-rise" coeA="0.01" coeB="1000" custom="true"></column>
+		<column name="host" type="key-value">
+			<key type="string" value="host">
+			</key>
+			<value type="string" value="xyd_host" ></value>
+		</column>
+	</record>
+	<record name="metric_opentsdb_3" active="false"><!-- active=false的话 则该记录不启用 -->
+		<column name="path"  type="string" value="mymertric.test.data_2"></column>
+		<column name="timestamp" type="timestamp"></column>
+		<column name="value" type="float" function-type="random" min="-1" max="1"></column>
+		<column name="host" type="key-value">
+			<key type="string" value="cpu">
+			</key>
+			<value type="string" value="e5" ></value>
+		</column>
+		<column name="value"  type="int" function-type="random" min="-1000000" max="1000000"></column>
+	</record>
+	
+	<!-- influxData start --> 
+	<record name="h2o_feet" active="false">
+		<column name="name" type="string" value="h2o_feet,"></column>
+		<column name="location" type="key-value">
+			<key type="string" value="location"></key>
+			<value type="string" value="santa_monica"></value>
+		</column>
+		<column name="water_level" type="key-value">
+			<key type="string" value=" water_level"></key>
+			<value type="string" value=""></value>
+		</column>
+		<column type="string" value=","></column>
+		<column name="level\ description" type="key-value">
+			<key type="string" value="level\ description"></key>
+			<value type="string" value="between 3 and 6 feet"></value>
+		</column>
+		<column type="string" value=" "></column>
+		<column name="timestamp" type="timestamp"></column>
+	</record>
+	<record name="average_temperature" active="true">
+		<column name="name" type="string" value="average_temperature,"></column>
+		<column name="location" type="key-value">
+			<key type="string" value="location"></key>
+			<value type="string" value="coyote_creek"></value>
+		</column>
+		<column type="string" value=" "></column>
+		<column name="degrees" type="key-value">
+			<key type="string" value="degrees"></key>
+			<value name="value"  type="int" function-type="random" min="-100" max="100"></value>
+		</column>
+		<column type="string" value=" "></column>
+		<column name="timestamp" type="timestamp"></column>
+	</record>
+	<record name="h2o_temperature" active="false">
+		<column name="name" type="string" value="h2o_temperature,"></column>
+		<column name="location" type="key-value">
+			<key type="string" value="location"></key>
+			<value type="string" value="santa_monica"></value>
+		</column>
+		<column type="string" value=" "></column>
+		<column name="degrees" type="key-value">
+			<key type="string" value="degrees"></key>
+			<value name="value"  type="int" function-type="random" min="-100" max="100"></value>
+		</column>
+		<column type="string" value=" "></column>
+		<column name="timestamp" type="timestamp"></column>
+	</record>
+	<!-- influxData end -->
+	
+	<!-- tsFile start -->
+	<record name="tsFile_1" active="false">
+		<column name="device" type="string" value="device_1"></column>
+		<column name="timestamp" type="timestamp"></column>
+		<column name="sensor_1" type="string" value="sensor_1"></column>
+		<column name="value"  type="int" function-type="random" min="-1000000" max="1000000"></column>
+		<column name="sensor_2" type="string" value="sensor_2"></column>
+		<column name="value"  type="int" function-type="random" min="-1000000" max="1000000"></column>
+		<column name="sensor_3" type="string" value="sensor_3"></column>
+		<column type="int"  function-type="sine-line" coeA="10000" coeB="0.0001" coeC="0" coeD="10000"></column>
+	</record>
+	
+	<!-- tsFile end -->
+</records>

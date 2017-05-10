@@ -1,0 +1,3 @@
+修改 /etc/influxdb/influxdb.conf
+write-timeout
+read-timeout
