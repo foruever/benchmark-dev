@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<database type="influxdb">
+		<devices>
+			<device device-ref-id="fengche1"></device>
+			<device device-ref-id="tuolaji1"></device>
+		</devices>
+	</database>
+	<database type="opentsdb">
+		<devices>
+			<device device-ref-id="fengche2"></device>
+			<device device-ref-id="tuolaji2"></device>
+		</devices>
+	</database>
+</config>

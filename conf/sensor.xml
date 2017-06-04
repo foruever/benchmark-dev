@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sensors>
+	<sensor id="t1" function-ref-id="float-sin" max="1000" min="18.25" cycle="3600">
+	<!-- cycle 周期:单位为s 不能为小数
+		若传感器值为数据型的 必须传最大最小值周期
+		若传感器值为非数据型的 最大最小值周期非必传
+	 -->
+	</sensor>
+	<sensor id="v1" function-ref-id="boolean-random" ></sensor>
+	<sensor id="mileage1" function-ref-id="int-mono" max="100" min="15" cycle="86400"></sensor>
+	<sensor id="mileage2" function-ref-id="int-square" max="100" min="0" cycle="86400"></sensor>
+</sensors>

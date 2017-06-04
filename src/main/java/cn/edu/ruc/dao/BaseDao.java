@@ -15,7 +15,7 @@ public interface BaseDao {
 	 * @return 插入成功为 true,
 	 *         插入失败为false
 	 */
-	boolean insertOnlyPoint();
+//	boolean insertOnlyPoint();
 	
 	/**
 	 * 2,插入某一个设备，某一采集点，多个时刻的值
@@ -23,13 +23,13 @@ public interface BaseDao {
 	 *          插入失败为false
 	 */
 	/*===================insert end=============*/
-	boolean insertMultiPoints();
+//	boolean insertMultiPoints();
 	
 	/*===================simple query start==================*/
 	/**
 	 * 3,由开始时间戳和结束时间戳查询，对应时间段，指定设备，指定采集点的数据集
 	 */
-	List<Object> selectPointsByTime();
+//	List<Object> selectPointsByTime();
 	
 	/*===================simple end start==================*/
 	
@@ -38,7 +38,7 @@ public interface BaseDao {
 	/**
 	 * 4,聚合分析指定设备，指定采集点的，某一时间段的最大值
 	 */
-	Object selectMaxByTimeAndDevice();
+//	Object selectMaxByTimeAndDevice();
 	
 	/*===================aggregation query end==================*/
 	
@@ -46,14 +46,14 @@ public interface BaseDao {
 	/**
 	 * 5,更新指定设备，指定采集点，指定时间的值
 	 */
-	boolean updatePointByTime();
+//	boolean updatePointByTime();
 	/*===================update end ==========================*/
 	
 	/*======================delete start==============================*/
 	/**
 	 * 6,删除指定设备，指定采集点，指定时间段的值
 	 */
-	boolean deletePointsByTime();
+//	boolean deletePointsByTime();
 	/*======================delete end==============================*/
 }
 
