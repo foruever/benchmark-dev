@@ -6,7 +6,7 @@
 		若传感器值为非数据型的 最大最小值周期非必传
 	 -->
 	</sensor>
-	<sensor id="v1" function-ref-id="boolean-random" ></sensor>
+	<sensor id="v1" function-ref-id="boolean-random" max="100" min="15"></sensor>
 	<sensor id="mileage1" function-ref-id="int-mono" max="100" min="15" cycle="86400"></sensor>
 	<sensor id="mileage2" function-ref-id="int-square" max="100" min="0" cycle="86400"></sensor>
 </sensors>

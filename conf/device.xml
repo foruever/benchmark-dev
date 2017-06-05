@@ -6,19 +6,19 @@
 			<tag key="city" value="taiyuang"></tag>
 		</nametags>
 		<sensors>
-			<sensor name="temperature" sensor-ref-id="t1" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00">
+			<sensor name="temperature" sensor-ref-id="t1" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00" step="1000">
 				<tags><!-- tags可没有，此时devicename为数的根 -->
 					<tag key="location" value="head"></tag>
 				</tags>
 			</sensor>
-			<sensor name="velocity" sensor-ref-id="v1" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00"></sensor>
+			<sensor name="velocity" sensor-ref-id="v1" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00" step="1000"></sensor>
 		</sensors>
 	</device>
 	
 	
 	<device id="tuolaji1" name="tuolaji1"> <!-- id不可重复，用来标识设备 -->
 		<sensors>
-			<sensor name="mileage" sensor-ref-id="mileage1" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00"></sensor>
+			<sensor name="mileage" sensor-ref-id="mileage1" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00" step="1000"></sensor>
 		</sensors>
 	</device>	
 </config>

@@ -14,6 +14,7 @@ public class SensorConf implements Serializable{
 	private String beginTime;
 	private String endTime;
 	private String sensorRefId;
+	private Long step;
 	private List<Tag> sensorTags=new ArrayList<Tag>();
 	@XmlAttribute(name="name")
 	public String getName() {
@@ -50,5 +51,12 @@ public class SensorConf implements Serializable{
 	}
 	public void setSensorTags(List<Tag> sensorTags) {
 		this.sensorTags = sensorTags;
+	}
+	@XmlAttribute(name="step")
+	public Long getStep() {
+		return step;
+	}
+	public void setStep(Long step) {
+		this.step = step;
 	}
 }
