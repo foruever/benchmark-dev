@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sensors>
-	<sensor id="t1" function-ref-id="float-sin" max="1000" min="18.25" cycle="3600">
+	<sensor id="t1" function-ref-id="float-sin" max="1000" min="18.25" cycle="3600"></sensor>
+	<sensor id="t2" function-ref-id="float-mono" max="900" min="18.25" cycle="3600"></sensor>
+	<sensor id="t3" function-ref-id="float-random" max="800" min="18.25" cycle="3600"></sensor>
+	<sensor id="t4" function-ref-id="float-square" max="700" min="18.25" cycle="3600"></sensor>
+	<sensor id="t5" function-ref-id="double-sin" max="2000" min="18.25" cycle="3600"></sensor>
+	<sensor id="t6" function-ref-id="double-mono" max="3222" min="18.25" cycle="3600"></sensor>
+	<sensor id="t7" function-ref-id="double-random" max="12312" min="18.25" cycle="3600"></sensor>
+	<sensor id="t8" function-ref-id="int-sin" max="8888" min="18.25" cycle="3600"></sensor>
+	<sensor id="t9" function-ref-id="int-mono" max="66" min="18.25" cycle="3600"></sensor>
+	<sensor id="t10" function-ref-id="int-random" max="1000" min="55" cycle="3600"></sensor>
 	<!-- cycle 周期:单位为s 不能为小数
 		若传感器值为数据型的 必须传最大最小值周期
 		若传感器值为非数据型的 最大最小值周期非必传
 	 -->
-	</sensor>
 	<sensor id="v1" function-ref-id="boolean-random" max="100" min="15"></sensor>
 	<sensor id="mileage1" function-ref-id="int-mono" max="100" min="15" cycle="86400"></sensor>
 	<sensor id="mileage2" function-ref-id="int-square" max="100" min="0" cycle="86400"></sensor>
