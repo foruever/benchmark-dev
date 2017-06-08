@@ -20,5 +20,21 @@ public class DateUtil {
 		}
 		return date;
 	}
+	/**
+	 * 日期时间戳转为 yyyy-MM-dd HH:mm:ss
+	 * @param time
+	 * @return
+	 */
+	public static String time2Str(long time){
+		Date date=new Date(time);
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateStr="1970-01-01 00:00:00";
+		try {
+			dateStr = sdf.format(date);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dateStr;
+	}
 }
 

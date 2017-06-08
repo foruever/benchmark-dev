@@ -15,6 +15,7 @@ import cn.edu.ruc.conf.sys.Device;
 import cn.edu.ruc.conf.sys.OfflineConfig;
 import cn.edu.ruc.conf.sys.Sensor;
 import cn.edu.ruc.function.Function;
+import cn.edu.ruc.utils.DateUtil;
 
 import com.ruc.BigDataGenerateMain;
 import com.ruc.CommonUtils;
@@ -22,6 +23,13 @@ import com.ruc.CommonUtils;
 public class OffLineService implements BaseOffLineService {
 	private static long count=0;
 	private static ExecutorService pool;
+	@Override
+	public boolean generateData() {
+		OfflineConfig offLineConfig = InitManager.getOfflineConfig();
+		String path = getClass().getClassLoader().getResource("").getPath();
+		String baseConfPath=path+"/data";
+		return generateData(baseConfPath);
+	}
 	@Override
 	public boolean generateData(String path) {
 		try {
@@ -34,6 +42,15 @@ public class OffLineService implements BaseOffLineService {
 				String type = db.getType();
 				if("influxdb".equals(type)){//FIXME influxdb
 					generateInfluxdbData(path,db);
+				}
+				if("opentsdb".equals(type)){//FIXME opentsdb
+					generateOpentsdbData(path,db);
+				}
+				if("tsfile".equals(type)){//FIXME tsfile
+					generateTsfileData(path,db);
+				}
+				if("mysql".equals(type)){//FIXME tsfile
+					generateMysqlData(path,db);
 				}
 			}
 			pool.shutdown();
@@ -81,7 +98,7 @@ public class OffLineService implements BaseOffLineService {
 					if(!dir.exists()){
 						dir.mkdir();
 					}
-					File file = new File(path+"/"+measurements);
+					File file = new File(path+"/"+db.getType()+"_"+measurements+"_"+System.currentTimeMillis());
 					if (file.exists()){
 						file.delete();
 					}
@@ -144,12 +161,232 @@ public class OffLineService implements BaseOffLineService {
 			});
 		}
 	}
-
-	@Override
-	public boolean generateData() {
-		OfflineConfig offLineConfig = InitManager.getOfflineConfig();
-		String path = BigDataGenerateMain.class.getClassLoader().getResource("").getPath();
-		String baseConfPath=path+"/data";
-		return generateData(baseConfPath);
+	private void generateOpentsdbData(String path, Database db) {
+		List<Device> devices = db.getDevices();
+		for(int deviceSeq=0;deviceSeq<devices.size();deviceSeq++){
+			final Device device = devices.get(deviceSeq);
+			pool.execute(new Runnable() {
+				@Override
+				public void run() {
+					String measurements = device.getName();
+					File dir=new File(path);
+					if(!dir.exists()){
+						dir.mkdir();
+					}
+					File file = new File(path+"/"+db.getType()+"_"+measurements+"_"+System.currentTimeMillis());
+					if (file.exists()){
+						file.delete();
+					}
+					try {
+						FileWriter fw = new FileWriter(file,true);
+						StringBuilder sc=new StringBuilder();
+						List<Tag> nameTags = device.getNameTags();
+						for(Tag tag:nameTags){
+							String value=tag.getValue();
+							sc.append(value);
+							sc.append(".");
+						}
+						sc.append(measurements);
+						String measumentInfo=sc.toString();
+						sc.setLength(0);
+						List<Sensor> sensors = device.getSensors();
+						for(Sensor sensor:sensors){
+							sc=new StringBuilder();
+							long startTime = sensor.getStartTime().getTime();
+							long endTime =sensor.getEndTime().getTime();
+							Double max = sensor.getMax();
+							Double min = sensor.getMin();
+							Long cycle = sensor.getCycle();
+							String functionId = sensor.getFuctionRefId();
+							Long step = sensor.getStep();
+							while(startTime<=endTime){
+								sc.append(measumentInfo);
+								sc.append(" ");
+								sc.append(startTime);
+								sc.append(" ");
+								sc.append(Function.getValueByFuntionidAndParam(functionId, max, min, cycle, startTime));
+								List<Tag> tags = sensor.getTags();
+								for(Tag tag:tags){
+									sc.append(" ");
+									sc.append(tag.getKey());
+									sc.append("=");
+									sc.append(tag.getValue());
+								}
+								sc.append("\r\n");
+								fw.write(sc.toString());
+								sc.setLength(0);
+								startTime+=step;
+								count++;
+								if(count%100000==0){
+									System.out.println("has generate ["+count+"]points");
+								}
+							}
+						}
+						fw.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+	}
+	private void generateTsfileData(String path, Database db) {
+		List<Device> devices = db.getDevices();
+		for(int deviceSeq=0;deviceSeq<devices.size();deviceSeq++){
+			final Device device = devices.get(deviceSeq);
+			pool.execute(new Runnable() {
+				@Override
+				public void run() {
+					String measurements = device.getName();
+					File dir=new File(path);
+					if(!dir.exists()){
+						dir.mkdir();
+					}
+					File file = new File(path+"/"+db.getType()+"_"+measurements+"_"+System.currentTimeMillis());
+					if (file.exists()){
+						file.delete();
+					}
+					try {
+						FileWriter fw = new FileWriter(file,true);
+						StringBuilder sc=new StringBuilder();
+						List<Tag> nameTags = device.getNameTags();
+						for(Tag tag:nameTags){
+							String value=tag.getValue();
+							sc.append(value);
+							sc.append(".");
+						}
+						sc.append(measurements);
+						String measumentInfo=sc.toString();
+						sc.setLength(0);
+						List<Sensor> sensors = device.getSensors();
+						for(Sensor sensor:sensors){
+							sc=new StringBuilder();
+							long startTime = sensor.getStartTime().getTime();
+							long endTime =sensor.getEndTime().getTime();
+							String sensorName = sensor.getName();
+							Double max = sensor.getMax();
+							Double min = sensor.getMin();
+							Long cycle = sensor.getCycle();
+							String functionId = sensor.getFuctionRefId();
+							Long step = sensor.getStep();
+							while(startTime<=endTime){
+								sc.append(measumentInfo);
+								sc.append(",");
+								sc.append(startTime);
+								sc.append(",");
+								sc.append(sensorName);
+								sc.append(",");
+								sc.append(Function.getValueByFuntionidAndParam(functionId, max, min, cycle, startTime));
+								//FIXME tsFile的tag如何表达  a.b.c可以吗
+//								List<Tag> tags = sensor.getTags();
+//								for(Tag tag:tags){
+//									sc.append(" ");
+//									sc.append(tag.getKey());
+//									sc.append("=");
+//									sc.append(tag.getValue());
+//								}
+								sc.append("\r\n");
+								fw.write(sc.toString());
+								sc.setLength(0);
+								startTime+=step;
+								count++;
+								if(count%100000==0){
+									System.out.println("has generate ["+count+"]points");
+								}
+							}
+						}
+						fw.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+	}
+	/**
+	 * mysql 数据生成，导入时，首先要创建好数据表
+	 * 
+	 * 
+	 * select date(from_unixtime(time_ms/1000)) ,avg(value)from sensor_value group by date(from_unixtime(time_ms/1000)) 
+	 * mysql 查询
+	 * @param path
+	 * @param db
+	 */
+	private void generateMysqlData(String path, Database db) {
+		List<Device> devices = db.getDevices();
+		for(int deviceSeq=0;deviceSeq<devices.size();deviceSeq++){
+			final Device device = devices.get(deviceSeq);
+			pool.execute(new Runnable() {
+				@Override
+				public void run() {
+					String measurements = device.getName();
+					File dir=new File(path);
+					if(!dir.exists()){
+						dir.mkdir();
+					}
+					File file = new File(path+"/"+db.getType()+"_"+measurements+"_"+System.currentTimeMillis());
+					if (file.exists()){
+						file.delete();
+					}
+					try {
+						FileWriter fw = new FileWriter(file,true);
+						StringBuilder sc=new StringBuilder();
+						List<Tag> nameTags = device.getNameTags();
+						for(Tag tag:nameTags){
+							String value=tag.getValue();
+							sc.append(value);
+							sc.append(".");
+						}
+						sc.append(measurements);
+						String measumentInfo=sc.toString();
+						sc.setLength(0);
+						List<Sensor> sensors = device.getSensors();
+						for(Sensor sensor:sensors){
+							sc=new StringBuilder();
+							long startTime = sensor.getStartTime().getTime();
+							long endTime =sensor.getEndTime().getTime();
+							String sensorName = sensor.getName();
+							Double max = sensor.getMax();
+							Double min = sensor.getMin();
+							Long cycle = sensor.getCycle();
+							String functionId = sensor.getFuctionRefId();
+							Long step = sensor.getStep();
+							while(startTime<=endTime){
+								sc.append(measumentInfo);
+//								sc.append(",");
+//								sc.append(DateUtil.time2Str(startTime) );
+//								sc.append(startTime/1000);
+//								sc.append(",");
+//								sc.append(startTime%1000);
+								sc.append(startTime);
+								sc.append(",");
+								sc.append(sensorName);
+								sc.append(",");
+								sc.append(Function.getValueByFuntionidAndParam(functionId, max, min, cycle, startTime));
+								//FIXME tsFile的tag如何表达  a.b.c可以吗
+//								List<Tag> tags = sensor.getTags();
+//								for(Tag tag:tags){
+//									sc.append(" ");
+//									sc.append(tag.getKey());
+//									sc.append("=");
+//									sc.append(tag.getValue());
+//								}
+								sc.append("\r\n");
+								fw.write(sc.toString());
+								sc.setLength(0);
+								startTime+=step;
+								count++;
+								if(count%100000==0){
+									System.out.println("has generate ["+count+"]points");
+								}
+							}
+						}
+						fw.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 	}
 }

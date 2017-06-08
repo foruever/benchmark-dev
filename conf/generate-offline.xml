@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<database type="influxdb">
+ 	<database type="influxdb">
 		<devices>
-			<device device-ref-id="fengche1"></device>
-			<device device-ref-id="tuolaji1"></device>
+<!-- 			<device device-ref-id="fengche1"></device> -->
+<!-- 			<device device-ref-id="tuolaji1"></device> -->
+			<device device-ref-id="d1"></device>
+		</devices>
+	</database> 
+	 <database type="opentsdb">
+		<devices>
+<!-- 			<device device-ref-id="fengche1"></device> -->
+<!-- 			<device device-ref-id="tuolaji1"></device> -->
+			<device device-ref-id="d1"></device>
+		</devices>
+	</database> 
+	<database type="tsfile">
+		<devices>
+<!-- 			<device device-ref-id="fengche1"></device> -->
+<!-- 			<device device-ref-id="tuolaji1"></device> -->
+			<device device-ref-id="d1"></device>
 		</devices>
 	</database>
-	<database type="opentsdb">
+	<database type="mysql">
 		<devices>
-			<device device-ref-id="fengche1"></device>
-			<device device-ref-id="tuolaji1"></device>
+<!-- 			<device device-ref-id="fengche1"></device> -->
+<!-- 			<device device-ref-id="tuolaji1"></device> -->
+			<device device-ref-id="d1"></device>
 		</devices>
 	</database>
 </config>
