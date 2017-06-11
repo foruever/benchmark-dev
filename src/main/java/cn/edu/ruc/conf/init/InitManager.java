@@ -33,7 +33,7 @@ public class InitManager {
 	private static List<Sensor> SENSORS=null; 
 	private static List<Device> DEVICES=null;
 	private static List<Database> DATABASES=null;
-	public static void initOfflineConf(){
+	private static void initOfflineConf(){
 		//sensor.xml start
 		Object object1=null;
 		try {
@@ -148,6 +148,9 @@ public class InitManager {
 		InitManager.initOfflineConf();
 		OfflineConfig offlineConfig = InitManager.getOfflineConfig();
 		System.out.println(offlineConfig);
+	}
+	public static void initConfig() {
+		initOfflineConf();
 	}
 }
 
