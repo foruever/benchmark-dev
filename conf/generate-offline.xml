@@ -9,21 +9,21 @@
 	</database> 
 	 <database type="opentsdb">
 		<devices>
-<!-- 			<device device-ref-id="fengche1"></device> -->
+			<device device-ref-id="fengche1"></device>
 <!-- 			<device device-ref-id="tuolaji1"></device> -->
 			<device device-ref-id="d1"></device>
 		</devices>
 	</database> 
 	<database type="tsfile">
 		<devices>
-<!-- 			<device device-ref-id="fengche1"></device> -->
+			<device device-ref-id="fengche1"></device>
 <!-- 			<device device-ref-id="tuolaji1"></device> -->
 			<device device-ref-id="d1"></device>
 		</devices>
 	</database>
 	<database type="mysql">
 		<devices>
-<!-- 			<device device-ref-id="fengche1"></device> -->
+			<device device-ref-id="fengche1"></device>
 <!-- 			<device device-ref-id="tuolaji1"></device> -->
 			<device device-ref-id="d1"></device>
 		</devices>

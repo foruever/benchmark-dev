@@ -18,7 +18,7 @@
 					<tag key="f" value="slsls"></tag>
 				</tags>
 			</sensor>
-			<sensor name="s2" sensor-ref-id="t2" begin-time="2017-06-01 00:00:00" end-time="2017-06-02 00:10:00" step="500"></sensor>
+			<sensor name="s2" sensor-ref-id="t2" begin-time="2017-06-01 00:00:00" end-time="2017-07-02 00:10:00" step="500"></sensor>
 			<sensor name="s3" sensor-ref-id="t3" begin-time="2017-06-01 00:00:00" end-time="2017-06-02 00:10:00" step="500"></sensor>
 			<sensor name="s4" sensor-ref-id="t4" begin-time="2017-06-01 00:00:00" end-time="2017-06-02 00:10:00" step="500"></sensor>
 			<sensor name="s5" sensor-ref-id="t5" begin-time="2017-06-01 00:00:00" end-time="2017-06-02 00:10:00" step="500"></sensor>
