@@ -11,7 +11,7 @@ import cn.edu.ruc.service.ServiceBoot;
 public class Bootstrap {
 	public static void main(String[] args) {
 		//FIXME 1,初始化各个配置
-		InitManager.initOfflineConf();
+		InitManager.initConfig();
 		//FIXME 2,进行业务处理
 		ServiceBoot.startServcie();
 	}
