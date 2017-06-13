@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import cn.edu.ruc.conf.base.Database;
 @XmlRootElement(name="config")
 public class GenerateOffline implements Serializable{
 	private static final long serialVersionUID = 1L;

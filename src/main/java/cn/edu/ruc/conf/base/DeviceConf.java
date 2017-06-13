@@ -1,4 +1,4 @@
-package cn.edu.ruc.conf.base.offline;
+package cn.edu.ruc.conf.base;
 
 import java.io.Serializable;
 

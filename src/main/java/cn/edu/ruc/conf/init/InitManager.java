@@ -9,16 +9,18 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import cn.edu.ruc.conf.base.Database;
+import cn.edu.ruc.conf.base.DeviceConf;
 import cn.edu.ruc.conf.base.device.Device;
 import cn.edu.ruc.conf.base.device.Devices;
 import cn.edu.ruc.conf.base.device.SensorConf;
 import cn.edu.ruc.conf.base.device.Tag;
-import cn.edu.ruc.conf.base.offline.Database;
-import cn.edu.ruc.conf.base.offline.DeviceConf;
 import cn.edu.ruc.conf.base.offline.GenerateOffline;
+import cn.edu.ruc.conf.base.online.GenerateOnline;
 import cn.edu.ruc.conf.base.sensor.Sensor;
 import cn.edu.ruc.conf.base.sensor.Sensors;
 import cn.edu.ruc.conf.sys.OfflineConfig;
+import cn.edu.ruc.conf.sys.OnlineConfig;
 import cn.edu.ruc.utils.DateUtil;
 
 import com.ruc.CommonUtils;
@@ -30,10 +32,12 @@ import com.ruc.CommonUtils;
  */
 public class InitManager {
 	private static final OfflineConfig OFFLINE_CONFIG=new OfflineConfig();
+	private static final OnlineConfig ONLINE_CONFIG=new OnlineConfig();
 	private static List<Sensor> SENSORS=null; 
 	private static List<Device> DEVICES=null;
-	private static List<Database> DATABASES=null;
-	private static void initOfflineConf(){
+	private static List<Database> OFFLINE_DATABASES=null;
+	private static List<Database> ONLINE_DATABASES=null;//FIXME DATABASE包含的设备可以再次优化为模板，然后DATABASES直接引用
+	private static void initBaseConf(){
 		//sensor.xml start
 		Object object1=null;
 		try {
@@ -73,16 +77,69 @@ public class InitManager {
 			e.printStackTrace();
 		}
 		GenerateOffline offline=(GenerateOffline)object3;
-		DATABASES=offline.getDatabases();
+		OFFLINE_DATABASES=offline.getDatabases();
 		//generate-offline.xml end
+		//generate-online.xml start
+		Object object4=null;
+		try {
+			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+			JAXBContext context = JAXBContext.newInstance(GenerateOnline.class,Database.class,DeviceConf.class);
+			Unmarshaller unmarshaller = context.createUnmarshaller(); 
+			object4 = unmarshaller.unmarshal(new File(path+"/generate-online.xml"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		GenerateOnline online=(GenerateOnline)object4;
+		ONLINE_DATABASES=online.getDatabases();
+		//generate-online.xml end
 		
-		//init offline
-		dealOfflineConfig();
 	}
-	private static void dealOfflineConfig() {
+	private static void initOfflineConfig() {
 		List<cn.edu.ruc.conf.sys.Database> dbs = OFFLINE_CONFIG.getDatabases();
-		if(DATABASES!=null&&DATABASES.size()>0){
-			for(Database cdb:DATABASES){
+		if(OFFLINE_DATABASES!=null&&OFFLINE_DATABASES.size()>0){
+			for(Database cdb:OFFLINE_DATABASES){
+				cn.edu.ruc.conf.sys.Database db=new cn.edu.ruc.conf.sys.Database();
+				db.setType(cdb.getType());
+				List<cn.edu.ruc.conf.sys.Device> devices = db.getDevices();
+				List<DeviceConf> deviceConfs = cdb.getDeviceConf();
+				if(deviceConfs!=null&&deviceConfs.size()>0){
+					for(DeviceConf dc:deviceConfs){
+						cn.edu.ruc.conf.sys.Device device=new cn.edu.ruc.conf.sys.Device();
+						Device cDevice = getDeviceById(dc.getDeviceRefId());
+						device.setName(cDevice.getName());
+						device.setNameTags(cDevice.getNameTags());
+						device.setId(cDevice.getId());
+						List<cn.edu.ruc.conf.sys.Sensor> sensors = device.getSensors();
+						List<SensorConf> sensorConfs = cDevice.getSensors();
+						if(sensorConfs!=null&&sensorConfs.size()>0){
+							for(SensorConf sc:sensorConfs){
+								cn.edu.ruc.conf.sys.Sensor sensor=new cn.edu.ruc.conf.sys.Sensor();
+								sensor.setName(sc.getName());
+								sensor.setStep(sc.getStep());
+								sensor.setTags(sc.getSensorTags());
+								sensor.setStartTime(DateUtil.datastr2Date(sc.getBeginTime()));
+								sensor.setEndTime(DateUtil.datastr2Date(sc.getEndTime()));
+								sensor.setId(sc.getSensorRefId());
+								Sensor cSensor= getSensorById(sc.getSensorRefId());
+								try {
+									BeanUtils.copyProperties(sensor, cSensor);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								sensors.add(sensor);
+							}
+						}
+						devices.add(device);
+					}
+				}
+				dbs.add(db);
+			}
+		}
+	}
+	private static void initOnlineConf() {
+		List<cn.edu.ruc.conf.sys.Database> dbs = ONLINE_CONFIG.getDatabases();
+		if(ONLINE_DATABASES!=null&&ONLINE_DATABASES.size()>0){
+			for(Database cdb:ONLINE_DATABASES){
 				cn.edu.ruc.conf.sys.Database db=new cn.edu.ruc.conf.sys.Database();
 				db.setType(cdb.getType());
 				List<cn.edu.ruc.conf.sys.Device> devices = db.getDevices();
@@ -144,13 +201,17 @@ public class InitManager {
 	public static OfflineConfig getOfflineConfig(){
 		return OFFLINE_CONFIG;
 	}
+	public static OnlineConfig getOnlineConfig(){
+		return ONLINE_CONFIG;
+	}
 	public static void main(String[] args) {
-		InitManager.initOfflineConf();
-		OfflineConfig offlineConfig = InitManager.getOfflineConfig();
-		System.out.println(offlineConfig);
+		InitManager.initConfig();
+		System.out.println(ONLINE_CONFIG);
 	}
 	public static void initConfig() {
-		initOfflineConf();
+		initBaseConf();
+		initOfflineConfig();
+		initOnlineConf();
 	}
 }
 

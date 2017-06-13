@@ -92,7 +92,7 @@ public class Function {
 //			System.out.println(getRandomValue(1000L, 0L));
 		}
 	}
-	public static Object getValueByFuntionidAndParam(String functionId,Double max,Double min,
+	public static Number getValueByFuntionidAndParam(String functionId,Double max,Double min,
 			long cycle,Long currentTime){
 		if("float-sin".equals(functionId)){
 			return (float)getSineValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
