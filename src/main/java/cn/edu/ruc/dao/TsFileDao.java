@@ -3,8 +3,8 @@ package cn.edu.ruc.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.List;
 
 import cn.edu.ruc.model.BenchmarkPoint;
@@ -21,9 +21,9 @@ public class TsFileDao implements BaseDao {
 		Statement statement = null;
 		  try {
 		    Class.forName("com.corp.tsfile.jdbc.TsfileDriver");
-		    connection = DriverManager.getConnection("jdbc:tsfile://114.115.137.143:6667", "root", "root");
+		    connection = DriverManager.getConnection("jdbc:tsfile://127.0.0.1:6667/", "root", "root");
 		    statement = connection.createStatement();
-		    boolean hasResultSet = statement.execute("select s1 from root.car.a1");
+		    boolean hasResultSet = statement.execute("select s1 from root.excavator.Beijing.d1");
 		        if (hasResultSet) {
 		            ResultSet res = statement.getResultSet();
 		      while (res.next()) {
@@ -53,6 +53,12 @@ public class TsFileDao implements BaseDao {
 	@Override
 	public boolean deleteAllPoints() {
 		return false;
+	}
+
+	@Override
+	public List<Object> selectPointsByTime(Date beginTime, Date endTime,
+			String device, String sensor) {
+		return null;
 	}
 
 }

@@ -1,5 +1,6 @@
 package cn.edu.ruc.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.edu.ruc.model.BenchmarkPoint;
@@ -30,7 +31,7 @@ public interface BaseDao {
 	/**
 	 * 3,由开始时间戳和结束时间戳查询，对应时间段，指定设备，指定采集点的数据集
 	 */
-//	List<Object> selectPointsByTime();
+	List<Object> selectPointsByTime(Date beginTime,Date endTime,String device,String sensor);
 	
 	/*===================simple end start==================*/
 	

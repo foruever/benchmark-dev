@@ -1,8 +1,7 @@
 package cn.edu.ruc.dao;
 
-import java.io.IOException;
+import java.util.Date;
 import java.util.List;
-
 
 import cn.edu.ruc.conf.base.device.Tag;
 import cn.edu.ruc.httpapi.opentsdb.ExpectResponse;
@@ -40,6 +39,13 @@ public class OpentsdbDao implements BaseDao {
 	@Override
 	public boolean deleteAllPoints() {
 		return false;
+	}
+
+	@Override
+	public List<Object> selectPointsByTime(Date beginTime, Date endTime,
+			String device, String sensor) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
