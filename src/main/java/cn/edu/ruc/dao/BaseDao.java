@@ -38,9 +38,9 @@ public interface BaseDao {
 	/*===================aggregation query start==================*/
 	
 	/**
-	 * 4,聚合分析指定设备，指定采集点的，某一时间段的最大值
+	 * 4,聚合分析指定设备，指定采集点的，某一时间段的最大值，分组 一个小时，一天，一个星期，一个月
 	 */
-//	Object selectMaxByTimeAndDevice();
+	Object selectMaxByTimeAndDevice(String sqlId,Date beginTime,Date endTime,String device,List<String> sensors);
 	
 	/*===================aggregation query end==================*/
 	

@@ -1,5 +1,6 @@
 package cn.edu.ruc.dao;
 
+import java.io.StringBufferInputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -7,13 +8,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
 import org.influxdb.InfluxDB.ConsistencyLevel;
+import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
-import org.influxdb.dto.QueryResult.Result;
 
 import cn.edu.ruc.conf.base.device.Tag;
 import cn.edu.ruc.model.BenchmarkPoint;
@@ -21,6 +21,17 @@ import okhttp3.OkHttpClient;
 
 public class InfluxdbDao implements BaseDao {
 	private InfluxDB influxDB=null;
+	public InfluxdbDao() {
+		//FIXME 修改为连接资源统一管理
+		initInfluxDB();
+	}
+	private void initInfluxDB() {
+		if(influxDB==null){
+			okhttp3.OkHttpClient.Builder cbuilder = new OkHttpClient.Builder();//FIXME okHttp 设置超时时间
+			cbuilder.connectTimeout(10, TimeUnit.SECONDS).writeTimeout(600, TimeUnit.SECONDS).readTimeout(600, TimeUnit.SECONDS);
+			influxDB = InfluxDBFactory.connect("http://influx-api.10step.top",cbuilder);//FIXME URL 
+		}
+	}
 	private InfluxDB getSession(String url){
 		if(influxDB==null){
 			okhttp3.OkHttpClient.Builder cbuilder = new OkHttpClient.Builder();//FIXME okHttp 设置超时时间
@@ -72,13 +83,17 @@ public class InfluxdbDao implements BaseDao {
 		influxDB.deleteDatabase("benchmark_perform");
 		return false;
 	}
-	String sql="select s1 from fengche1 limit 1 ";
-	Query query=new Query(sql,"ruc_benchmark");
 	@Override
 	public List<Object> selectPointsByTime(Date beginTime, Date endTime,
 			String device, String sensor) {
-		QueryResult qr = influxDB.query(query);
-		System.out.println(qr);
+		String sql="select s1 from fengche1 limit 10 ";
+		Query query=new Query(sql,"ruc_benchmark");
+		try {
+			QueryResult qr = influxDB.query(query);
+		} catch (Exception e) {
+//			System.out.println("--");
+		}
+//		System.out.println(qr);
 		return null;
 	}
 	private static long beginTime;
@@ -121,6 +136,30 @@ public class InfluxdbDao implements BaseDao {
 				}
 			}
 		}
+	}
+	@Override
+	public Object selectMaxByTimeAndDevice(String sqlId, Date beginTime, Date endTime, String device,
+			List<String> sensors) {
+		StringBuilder sc=new StringBuilder();
+		sc.append("select ");
+		for(int i=0;i<sensors.size();i++){
+			String sensor=sensors.get(i);
+			sc.append("max(");
+			sc.append(sensor);
+			sc.append(")");
+			if(i!=sensors.size()-1){
+				sc.append(",");
+			}
+		}
+		sc.append(" from ");
+		sc.append(device);
+		sc.append(" where time>='2017-06-01 00:00:00' and time< '2017-06-02 00:00:00' ");
+		sc.append(" group by time(1h)");
+		Query query=new Query(sc.toString(),"ruc_benchmark");
+//		System.out.println(sc.toString());
+		QueryResult qr = influxDB.query(query);
+//		System.out.println(qr);
+		return null;
 	}
 
 

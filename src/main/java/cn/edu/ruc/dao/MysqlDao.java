@@ -27,6 +27,13 @@ public class MysqlDao implements BaseDao {
 		return null;
 	}
 
+	@Override
+	public Object selectMaxByTimeAndDevice(String sqlId, Date beginTime, Date endTime, String device,
+			List<String> sensors) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
 
