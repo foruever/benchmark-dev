@@ -63,7 +63,8 @@ public class OnlineService implements BaseOnlineService{
 	static int successCount=0;
 	@Override
 	public void singleSimpleQueryPerform() {
-		//查询某一时间段，某一设备，某一传感器的数据集  1 minute的数据   ,可以计算出，每秒的处理是的事务数TPS，每种情况下，执行一条查询10000数据点的sql，每条数据的延迟时间
+		//FIXME 每一个条件设置，都要考虑到实际的场景
+		//查询某一时间段，某一设备，某一传感器的数据集  15 minute的数据   ,可以计算出，每秒的处理是的事务数TPS，每种情况下，执行一条查询10000数据点的sql，每条数据的延迟时间
 		//可以考虑，不断加压时候，每段负载的时间加长一段时间，每个线程多持续一段时间，测试结果更科学
 		OnlineConfig config = InitManager.getOnlineConfig();
 		List<Database> dbs = config.getDatabases();
@@ -179,7 +180,8 @@ public class OnlineService implements BaseOnlineService{
 	@Override
 	public void multiStableInsertAndQueryPerform() {
 		//固定一个写入的压力，不断添加读取压力,测试混合负载下读取压力(包含简单查询和分析查询)
-		
+//		stableInsertLoad(0.2);//施加固定的写入压力
+		singleAggregatePerform();//测试简单读取
 	}
 	@Override
 	public void multiStableQueryAndInsertPerform() {
