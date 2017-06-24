@@ -20,7 +20,7 @@ public class ServiceBoot {
 		//在线模式 性能测试   首先导入一个月的数据
 		OnlineService online=new OnlineService();
 		//每秒进去的数据量，通过加设备，怪怪的
-//		online.insertPerform();
+		online.insertPerform();
 		online.singleSimpleQueryPerform();
 		online.singleAggregatePerform();
 	}

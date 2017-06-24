@@ -180,8 +180,18 @@ public class OnlineService implements BaseOnlineService{
 	@Override
 	public void multiStableInsertAndQueryPerform() {
 		//固定一个写入的压力，不断添加读取压力,测试混合负载下读取压力(包含简单查询和分析查询)
-//		stableInsertLoad(0.2);//施加固定的写入压力
+		stableInsertLoad(0.2);//施加固定的写入压力
 		singleAggregatePerform();//测试简单读取
+	}
+	/**
+	 * 
+	 * @param ratio 写入压力最大比例
+	 * 如 0.2 则压力为最大压力的0.2倍
+	 */
+	private void stableInsertLoad(double ratio) {
+		//获取最大压力
+		
+		//施加压力并记录
 	}
 	@Override
 	public void multiStableQueryAndInsertPerform() {

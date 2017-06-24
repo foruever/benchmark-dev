@@ -123,11 +123,11 @@
             <version>1.2.10</version>
         </dependency>
         <!-- tsFile jdbc -->
-        <dependency>
-		    <groupId>com.corp.tsfile</groupId>
-		    <artifactId>jdbc</artifactId>
-		    <version>0.0.2</version>
-		</dependency>
+<!--         <dependency> -->
+<!-- 		    <groupId>com.corp.tsfile</groupId> -->
+<!-- 		    <artifactId>jdbc</artifactId> -->
+<!-- 		    <version>0.0.2</version> -->
+<!-- 		</dependency> -->
         <!-- https://mvnrepository.com/artifact/org.apache.hbase/hbase-client -->
 <!-- 		<dependency> -->
 <!-- 		    <groupId>org.apache.hbase</groupId> -->
