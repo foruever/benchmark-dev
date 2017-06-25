@@ -178,24 +178,79 @@ public class OnlineService implements BaseOnlineService{
 		
 	}
 	@Override
+	public void singleSimpleAndAggrMutiPerform(double simple, double aggregate) {
+		//从N=1开始，不断加压
+		//计算N=n时，需要加多少简单查询，加多少分析查询
+		//进行加压测试10s
+	}
+	@Override
 	public void multiStableInsertAndQueryPerform() {
 		//固定一个写入的压力，不断添加读取压力,测试混合负载下读取压力(包含简单查询和分析查询)
-		stableInsertLoad(0.2);//施加固定的写入压力
-		singleAggregatePerform();//测试简单读取
+		startStableInsertLoad(0.2);//施加固定的写入压力
+		singleSimpleQueryPerform();//测试简单读取
+		singleAggregatePerform();//测试分析读取
+		endStableInsertLoad();//结束固定的写入压力   每次调用的都带一个唯一的名字，可以结束该线程
+	}
+	/**
+	 * 结束固定的写入压力
+	 */
+	private void endStableInsertLoad() {
+		
 	}
 	/**
 	 * 
 	 * @param ratio 写入压力最大比例
 	 * 如 0.2 则压力为最大压力的0.2倍
 	 */
-	private void stableInsertLoad(double ratio) {
+	private void startStableInsertLoad(final double ratio) {
 		//获取最大压力
-		
-		//施加压力并记录
+		int maxLoad=getMaxInsertLoad();//TODO 
+		BaseDao dao = DaoFactory.getDao("influxdb");//FIXME influxdb
+		//施加压力并记录   FIXME 最好设计为与实际类似的场景，ps,但是具体实际场景是未知的，先做出来再说吧
+		int loadLine=(int) (ratio*maxLoad);
+		while(true){//每秒钟插入 maxLoad*ratio条记录
+			List<BenchmarkPoint> points=new ArrayList<BenchmarkPoint>();//FIXME 生成loadLine条points
+			long startTime = System.currentTimeMillis();
+			dao.insertMultiPoints(points);//插入数据
+			long endTime = System.currentTimeMillis();
+			long costTime=endTime-startTime;
+			if(costTime<1000){
+				try {
+					Thread.currentThread().sleep(1000-costTime);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			//FIXME 在性能调用该方法的性能开始下降是否停止该线程  加一个全局变量，判断是否已经调用该方法的测试性能的线程是否已经结束
+		}
+	}
+	private int getMaxInsertLoad() {
+		return 0;
 	}
 	@Override
 	public void multiStableQueryAndInsertPerform() {
 		//固定一个读取的压力，不断添加写入压力，测试混合负载下写入性能
+		startStableQueryLoad(0.2,99,1);
+		insertPerform();
+		endStableQueryLoad(0.2);
+	}
+	/**
+	 * 开始稳定的查询负载
+	 * 
+	 * 在数据加压程序运行过程中，普通查询:分析查询的比例是一定的，后期参数进行优化
+	 * @param ratio
+	 * @param simple
+	 * @param aggregate
+	 * TODO 与前面的混合加压测试方法类似，做完后，设法将方法合并，此次先完成功能，功能完成后进行优化
+	 */
+	private void startStableQueryLoad(double ratio,double simple,double aggregate) {
+		int  maxLoad=getMaxQueryLoad(simple,aggregate);
+		BaseDao dao = DaoFactory.getDao("influxdb");//FIXME influxdb
+	}
+	private int getMaxQueryLoad(double simple, double aggregate) {
+		return 0;
+	}
+	private void endStableQueryLoad(double d) {
 		
 	}
 }

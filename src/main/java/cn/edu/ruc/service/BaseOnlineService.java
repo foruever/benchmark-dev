@@ -10,6 +10,12 @@ public interface BaseOnlineService {
 	public void singleSimpleQueryPerform();
 	public void singleAggregatePerform();
 	/**
+	 * 
+	 * @param simple 简单查询所占比例
+	 * @param aggregate 分析查询所占比例
+	 */
+	public void singleSimpleAndAggrMutiPerform(double simple,double aggregate);
+	/**
 	 * 先写死的
 	 * 实现功能，然后改为可配置的
 	 * */

@@ -13,8 +13,8 @@ public class ServiceBoot {
 		
 		
 		//FIXME 后期加判断
-//		OffLineService offLine=new OffLineService();
-//		offLine.generateData();
+		OffLineService offLine=new OffLineService();
+		offLine.generateData();
 		
 		
 		//在线模式 性能测试   首先导入一个月的数据
