@@ -84,6 +84,7 @@ public class OffLineService implements BaseOffLineService {
 	}
 	/**
 	 * 生成influxdb的数据
+	 * FIXME influxdb 保存的数据表写死，所有的设备都在一张表中，方便聚合查询 ,设备名用 device区分
 	 * @param confUrl
 	 */
 	private void generateInfluxdbData(final String path,Database db) {
@@ -93,15 +94,16 @@ public class OffLineService implements BaseOffLineService {
 			pool.execute(new Runnable() {
 				@Override
 				public void run() {
-					String measurements = device.getName();
+					String deviceName = device.getName();
 					File dir=new File(path);
 					if(!dir.exists()){
 						dir.mkdir();
 					}
-					File file = new File(path+"/"+db.getType()+"_"+measurements+"_"+System.currentTimeMillis());
+					File file = new File(path+"/"+db.getType()+"_"+deviceName+"_"+System.currentTimeMillis());
 					if (file.exists()){
 						file.delete();
 					}
+					String measurements="point";
 					try {
 						FileWriter fw = new FileWriter(file,true);
 						StringBuilder sc=new StringBuilder();
@@ -116,6 +118,9 @@ public class OffLineService implements BaseOffLineService {
 						fw.write(sc.toString());
 						sc.setLength(0);
 						sc.append(measurements);
+						sc.append(",");
+						sc.append("device=");
+						sc.append(deviceName);
 						List<Tag> nameTags = device.getNameTags();
 						for(Tag tag:nameTags){
 							String key = tag.getKey();

@@ -18,7 +18,11 @@ import org.influxdb.dto.QueryResult;
 import cn.edu.ruc.conf.base.device.Tag;
 import cn.edu.ruc.model.BenchmarkPoint;
 import okhttp3.OkHttpClient;
-
+/**
+ * influxdb处理数据库类
+ * @author Sunxg
+ *
+ */
 public class InfluxdbDao implements BaseDao {
 	private InfluxDB influxDB=null;
 	public InfluxdbDao() {
@@ -66,7 +70,7 @@ public class InfluxdbDao implements BaseDao {
 			batchPoints.point(pointBuilder.build());
 		}
 		long beginTime=System.currentTimeMillis();
-		influxDB.write(batchPoints);
+		influxDB.write(batchPoints);//FIXME 因为这个只能每次发送的tag(key=value)必须是相同的，不满足需求，所以需要自己修改下，调用http框架，发送数
 		long endTime=System.currentTimeMillis();
 		long cost=endTime-beginTime;
 //		System.out.println("lines:"+points.size()+"||cost:"+cost);
