@@ -9,6 +9,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import cn.edu.ruc.Bootstrap;
 import cn.edu.ruc.conf.base.Database;
 import cn.edu.ruc.conf.base.DeviceConf;
 import cn.edu.ruc.conf.base.device.Device;
@@ -41,9 +42,11 @@ public class InitManager {
 		//sensor.xml start
 		Object object1=null;
 		try {
-			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+//			String path = InitManager.class.getClassLoader().getResource("").getPath();
+			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(Sensors.class,Sensor.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
+			System.out.println(path);
 			object1 = unmarshaller.unmarshal(new File(path+"/sensor.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,7 +58,8 @@ public class InitManager {
 		//device.xml start
 		Object object2=null;
 		try {
-			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+//			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(Devices.class,Device.class,SensorConf.class,Tag.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
 			object2 = unmarshaller.unmarshal(new File(path+"/device.xml"));
@@ -69,7 +73,8 @@ public class InitManager {
 		//generate-offline.xml start
 		Object object3=null;
 		try {
-			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+//			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(GenerateOffline.class,Database.class,DeviceConf.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
 			object3 = unmarshaller.unmarshal(new File(path+"/generate-offline.xml"));
@@ -82,7 +87,8 @@ public class InitManager {
 		//generate-online.xml start
 		Object object4=null;
 		try {
-			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+//			String path = CommonUtils.class.getClassLoader().getResource("").getPath();
+			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(GenerateOnline.class,Database.class,DeviceConf.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
 			object4 = unmarshaller.unmarshal(new File(path+"/generate-online.xml"));

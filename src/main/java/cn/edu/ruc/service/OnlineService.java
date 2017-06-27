@@ -1,5 +1,6 @@
 package cn.edu.ruc.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -14,48 +15,58 @@ import cn.edu.ruc.dao.BaseDao;
 import cn.edu.ruc.dao.DaoFactory;
 import cn.edu.ruc.function.Function;
 import cn.edu.ruc.model.BenchmarkPoint;
+import cn.edu.ruc.utils.BizUtils;
 
 public class OnlineService implements BaseOnlineService{
 	private static ExecutorService pool;
 	@Override
 	public void insertPerform() {
+		//初始化已经插入上亿条数据了，所以增加完是否删除的意义已经不大
 		OnlineConfig config = InitManager.getOnlineConfig();
 		List<Database> dbs = config.getDatabases();
 		for(Database db:dbs){
 			String type = db.getType();
-			System.out.println("type:"+type);
-			List<BenchmarkPoint> points=new ArrayList<BenchmarkPoint>();
 			List<Device> devices = db.getDevices();
+			//写入性能测试时候，传感器的开始时间，结束时间不重要，知道测试到数据库到瓶颈位置
+			//开始时间和结束时间也有意义，但当前时间不在这个时间范围内，则不生成数据
 			for(int i=0;i<devices.size();i++){
-				Device device=devices.get(i);
-				List<Sensor> sensors = device.getSensors();
-				for(Sensor sensor:sensors){
-					long startTime = sensor.getStartTime().getTime();
-					long endTime =sensor.getEndTime().getTime();
-					Double max = sensor.getMax();
-					Double min = sensor.getMin();
-					Long cycle = sensor.getCycle();
-					String functionId = sensor.getFuctionRefId();
-					Long step = sensor.getStep();
-					while(startTime<=endTime){
+				List<BenchmarkPoint> points=new ArrayList<BenchmarkPoint>();
+				for(int j=0;j<=i;j++){
+					Device device=devices.get(j);
+					List<Sensor> sensors = device.getSensors();
+					for(Sensor sensor:sensors){
+						//原来版本是生成该传感器的所有数据，然后插入数据
+						long currentTime=System.currentTimeMillis();
+						long startTime = sensor.getStartTime().getTime();
+						long endTime =sensor.getEndTime().getTime();
+						Long step = sensor.getStep();
+						//FIXME 以上这三个参数可进行优化，如果时间不满足这三个参数，则不生成数据
+						Double max = sensor.getMax();
+						Double min = sensor.getMin();
+						Long cycle = sensor.getCycle();
+						String functionId = sensor.getFuctionRefId();
 						BenchmarkPoint point=new BenchmarkPoint();
 						point.setDeviceName(device.getName()+(i+1));
 						point.setDeviceTags(device.getNameTags());
 						point.setSensorName(sensor.getName());
 						point.setSensorTags(sensor.getTags());
-						point.setTimestamp(startTime);
-						point.setValue(Function.getValueByFuntionidAndParam(functionId, max, min, cycle, startTime));
+						point.setTimestamp(currentTime);
+						point.setValue(Function.getValueByFuntionidAndParam(functionId, max, min, cycle, currentTime));
 						points.add(point);
-						startTime+=step;
-//						System.out.println(point);
+//						startTime+=step;
 					}
 				}
 				BaseDao dao = DaoFactory.getDao(type);
+				long beginTime=System.currentTimeMillis();
 				long costTime = dao.insertMultiPoints(points);
-				dao.deleteAllPoints();
 				if(costTime<1000L){
 					costTime=1000L;
 				}
+				String sql="insert into perform_only_write"
+						+ "(db_type,batch_id,target_devices_per,"
+						+ "target_lines_per,actual_lines_per,operate_time) values(?,?,?,?,?,?)";
+				Object[] params={1,BizUtils.getBatchId(),i+1,points.size(),points.size()*1000/costTime,new Timestamp(beginTime)};
+				BizUtils.insertBySqlAndParam(sql, params);
 				System.out.println(points.size()+":"+(points.size()*1000/costTime)+" points/s");
 			}
 		}
