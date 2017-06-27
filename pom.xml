@@ -54,6 +54,15 @@
         
         <!--  influxDB end -->
         
+        <!-- https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils -->
+        <!-- dbutils -->
+		<dependency>
+		    <groupId>commons-dbutils</groupId>
+		    <artifactId>commons-dbutils</artifactId>
+		    <version>1.6</version>
+		</dependency>
+        
+        
         
         <dependency>
             <groupId>org.hamcrest</groupId>
