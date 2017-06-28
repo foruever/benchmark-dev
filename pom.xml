@@ -185,8 +185,50 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+			<plugin>  
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-jar-plugin</artifactId>  
+            <version>2.6</version>  
+            <configuration>  
+                <archive>  
+                    <manifest>  
+                        <addClasspath>true</addClasspath>  
+                        <classpathPrefix>lib/</classpathPrefix>  
+                        <mainClass>cn.edu.ruc.Bootstrap</mainClass>  
+                    </manifest>  
+                </archive>  
+            </configuration>  
+        </plugin>  
+         <plugin>  
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-dependency-plugin</artifactId>  
+            <version>2.10</version>  
+            <executions>  
+                <execution>  
+                    <id>copy-dependencies</id>  
+                    <phase>package</phase>  
+                    <goals>  
+                        <goal>copy-dependencies</goal>  
+                    </goals>  
+                    <configuration>  
+                        <outputDirectory>${project.build.directory}/lib</outputDirectory>  
+                    </configuration>  
+                </execution>  
+            </executions>  
+        </plugin>  
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 	</build> 
 </project>

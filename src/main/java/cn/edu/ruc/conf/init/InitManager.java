@@ -42,12 +42,13 @@ public class InitManager {
 		//sensor.xml start
 		Object object1=null;
 		try {
+			System.out.println(InitManager.class.getClassLoader().getResource(""));
 //			String path = InitManager.class.getClassLoader().getResource("").getPath();
 			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(Sensors.class,Sensor.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
 			System.out.println(path);
-			object1 = unmarshaller.unmarshal(new File(path+"/sensor.xml"));
+			object1 = unmarshaller.unmarshal(new File(path+"/classes/sensor.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,7 +63,7 @@ public class InitManager {
 			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(Devices.class,Device.class,SensorConf.class,Tag.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
-			object2 = unmarshaller.unmarshal(new File(path+"/device.xml"));
+			object2 = unmarshaller.unmarshal(new File(path+"/classes/device.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,7 +78,7 @@ public class InitManager {
 			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(GenerateOffline.class,Database.class,DeviceConf.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
-			object3 = unmarshaller.unmarshal(new File(path+"/generate-offline.xml"));
+			object3 = unmarshaller.unmarshal(new File(path+"/classes/generate-offline.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -91,7 +92,7 @@ public class InitManager {
 			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(GenerateOnline.class,Database.class,DeviceConf.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
-			object4 = unmarshaller.unmarshal(new File(path+"/generate-online.xml"));
+			object4 = unmarshaller.unmarshal(new File(path+"/classes/generate-online.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
