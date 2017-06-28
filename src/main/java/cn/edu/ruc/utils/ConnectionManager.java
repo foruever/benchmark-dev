@@ -1,7 +1,11 @@
 package cn.edu.ruc.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
@@ -12,17 +16,25 @@ import java.util.ResourceBundle;
 public class ConnectionManager {
 	private static String PROP_NAME="db";
 	private static ResourceBundle R_B=ResourceBundle.getBundle(PROP_NAME);
-	private static String DRIVER_CLASS=R_B.getString("driver");
-	private static String URL=R_B.getString("jdbcUrl");
-	private static String USERNAME=R_B.getString("username");
-	private static String PASSWORD=R_B.getString("password");
+	private static String DRIVER_CLASS;
+	private static String URL;
+	private static String USERNAME;
+	private static String PASSWORD;
 	private static void initParam() {
 		if(DRIVER_CLASS==null&&URL==null&&USERNAME==null&&PASSWORD==null){
-			ResourceBundle bundle = ResourceBundle.getBundle("db");
-			DRIVER_CLASS=bundle.getString("driver");
-			URL=bundle.getString("jdbcUrl");
-			USERNAME=bundle.getString("username");
-			PASSWORD=bundle.getString("password");
+			String path = System.getProperty("user.dir");
+			File file=new File(path+"/classes/db.properties");
+			Properties prop=new Properties();
+			try {
+				prop.load(new FileInputStream(file));
+				DRIVER_CLASS=prop.getProperty("driver");
+				URL=prop.getProperty("jdbcUrl");
+				USERNAME=prop.getProperty("username");
+				PASSWORD=prop.getProperty("password");
+				System.out.println(URL+":"+PASSWORD);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	/**
@@ -31,7 +43,7 @@ public class ConnectionManager {
 	 * @throws Exception
 	 */
 	public static Connection getConnection() {
-//		initParam();
+		initParam();
 		Connection conn=null;
 		try {
 			Class.forName(DRIVER_CLASS);
