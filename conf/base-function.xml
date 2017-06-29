@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<functions>
+	<!-- 
+	   属性解释: 
+	   id:唯一 用于引用
+	   date-type:数据类型 float,double,int,boolean
+	   关于int64,设置到sensor中的max值，min即可以选择生成int64/32
+	   function-type 函数类型
+	   		sin:正弦函数
+	   		mono:单调斜率唯一函数
+	   		random:随机数
+	   		square:方波周期
+	 -->
+	<function id="float-sin" data-type="float" function-type="sin"></function>
+	<function id="float-mono" data-type="float" function-type="mono"></function>
+	<function id="float-random" data-type="float" function-type="random"></function>
+	<function id="float-square" data-type="float" function-type="square"></function>
+	
+	<function id="double-sin" data-type="double" function-type="sin"></function>
+	<function id="double-mono" data-type="double" function-type="mono"></function>
+	<function id="double-random" data-type="double" function-type="random"></function>
+	<function id="double-square" data-type="double" function-type="square"></function>
+	
+	<function id="int-sin" data-type="int" function-type="sin"></function>
+	<function id="int-mono" data-type="int" function-type="mono" ></function>
+	<function id="int-random" data-type="int" function-type="random" ></function>
+	<function id="int-square" data-type="int" function-type="square" ></function>
+	
+	<function id="boolean-random" data-type="boolean"></function>
+</functions>

@@ -48,7 +48,7 @@ public class InitManager {
 			JAXBContext context = JAXBContext.newInstance(Sensors.class,Sensor.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
 			System.out.println(path);
-			object1 = unmarshaller.unmarshal(new File(path+"/classes/sensor.xml"));
+			object1 = unmarshaller.unmarshal(new File(path+"/conf/sensor.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
