@@ -13,14 +13,14 @@ public class ServiceBoot {
 		
 		
 		//FIXME 后期加判断
-		OffLineService offLine=new OffLineService();
-		offLine.generateData();
+//		OffLineService offLine=new OffLineService();
+//		offLine.generateData();
 		
 		
 		//在线模式 性能测试   首先导入一个月的数据
-//		OnlineService online=new OnlineService();
+		OnlineService online=new OnlineService();
 		//每秒进去的数据量，通过加设备，怪怪的
-//		online.insertPerform();
+		online.insertPerform();
 //		online.singleSimpleQueryPerform();
 //		online.singleAggregatePerform();
 	}
