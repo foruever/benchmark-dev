@@ -41,7 +41,7 @@ public class Bootstrap {
 		//FIXME 1,初始化各个配置
 		InitManager.initConfig();
 		//FIXME 2,进行业务处理
-//		ServiceBoot.startServcie();
+		ServiceBoot.startServcie();
 	}
 }
 

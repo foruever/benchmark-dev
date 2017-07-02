@@ -21,7 +21,7 @@ public class ServiceBoot {
 		OnlineService online=new OnlineService();
 		//每秒进去的数据量，通过加设备，怪怪的
 		online.insertPerform();
-//		online.singleSimpleQueryPerform();
+		online.singleSimpleQueryPerform();
 //		online.singleAggregatePerform();
 	}
 }

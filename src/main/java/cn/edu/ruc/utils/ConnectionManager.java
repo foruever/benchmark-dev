@@ -23,7 +23,7 @@ public class ConnectionManager {
 	private static void initParam() {
 		if(DRIVER_CLASS==null&&URL==null&&USERNAME==null&&PASSWORD==null){
 			String path = System.getProperty("user.dir");
-			File file=new File(path+"/classes/db.properties");
+			File file=new File(path+"/conf/db.properties");
 			Properties prop=new Properties();
 			try {
 				prop.load(new FileInputStream(file));

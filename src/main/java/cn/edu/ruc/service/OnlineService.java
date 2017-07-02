@@ -29,45 +29,52 @@ public class OnlineService implements BaseOnlineService{
 			List<Device> devices = db.getDevices();
 			//写入性能测试时候，传感器的开始时间，结束时间不重要，知道测试到数据库到瓶颈位置
 			//开始时间和结束时间也有意义，但当前时间不在这个时间范围内，则不生成数据
-			for(int i=0;i<devices.size();i++){
-				List<BenchmarkPoint> points=new ArrayList<BenchmarkPoint>();
-				for(int j=0;j<=i;j++){
-					Device device=devices.get(j);
-					List<Sensor> sensors = device.getSensors();
-					for(Sensor sensor:sensors){
-						//原来版本是生成该传感器的所有数据，然后插入数据
-						long currentTime=System.currentTimeMillis();
-						long startTime = sensor.getStartTime().getTime();
-						long endTime =sensor.getEndTime().getTime();
-						Long step = sensor.getStep();
-						//FIXME 以上这三个参数可进行优化，如果时间不满足这三个参数，则不生成数据
-						Double max = sensor.getMax();
-						Double min = sensor.getMin();
-						Long cycle = sensor.getCycle();
-						String functionId = sensor.getFuctionRefId();
-						BenchmarkPoint point=new BenchmarkPoint();
-						point.setDeviceName(device.getName()+(i+1));
-						point.setDeviceTags(device.getNameTags());
-						point.setSensorName(sensor.getName());
-						point.setSensorTags(sensor.getTags());
-						point.setTimestamp(currentTime);
-						point.setValue(Function.getValueByFuntionidAndParam(functionId, max, min, cycle, currentTime));
-						points.add(point);
+			for(int i=0;i<devices.size();i++){//FIXME 2017-07-02 目前只设置一个类型的设备，不断增加设备进行增压
+				for(int time=0;time<1500;time++){//FIXME 2017-07-02 具体执行多少次，设置被可配置的
+					List<BenchmarkPoint> points=new ArrayList<BenchmarkPoint>();
+					for(int j=0;j<=time;j++){
+						Device device=devices.get(i);
+						List<Sensor> sensors = device.getSensors();
+						for(Sensor sensor:sensors){
+							//原来版本是生成该传感器的所有数据，然后插入数据
+							long currentTime=System.currentTimeMillis();
+							long startTime = sensor.getStartTime().getTime();
+							long endTime =sensor.getEndTime().getTime();
+							Long step = sensor.getStep();
+							//FIXME 以上这三个参数可进行优化，如果时间不满足这三个参数，则不生成数据
+							Double max = sensor.getMax();
+							Double min = sensor.getMin();
+							Long cycle = sensor.getCycle();
+							String functionId = sensor.getFuctionRefId();
+							BenchmarkPoint point=new BenchmarkPoint();
+							point.setDeviceName(device.getName()+(time+1));
+							point.setDeviceTags(device.getNameTags());
+							point.setSensorName(sensor.getName());
+							point.setSensorTags(sensor.getTags());
+							point.setTimestamp(currentTime);
+							point.setValue(Function.getValueByFuntionidAndParam(functionId, max, min, cycle, currentTime));
+							points.add(point);
 //						startTime+=step;
+						}
+					}
+					BaseDao dao = DaoFactory.getDao(type);
+					long beginTime=System.currentTimeMillis();
+					long costTime = dao.insertMultiPoints(points);
+					if(costTime<1000L){
+						costTime=1000L;
+					}
+					String sql="insert into perform_only_write"
+							+ "(db_type,batch_id,target_devices_per,"
+							+ "target_lines_per,actual_lines_per,operate_time) values(?,?,?,?,?,?)";
+					Object[] params={1,BizUtils.getBatchId(),time+1,points.size(),points.size()*1000/costTime,new Timestamp(beginTime)};
+					BizUtils.insertBySqlAndParam(sql, params);
+					System.out.println(points.size()+":"+(points.size()*1000/costTime)+" points/s");
+					try {
+						Thread.currentThread().sleep(1000L);//线程休息一秒
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
-				BaseDao dao = DaoFactory.getDao(type);
-				long beginTime=System.currentTimeMillis();
-				long costTime = dao.insertMultiPoints(points);
-				if(costTime<1000L){
-					costTime=1000L;
-				}
-				String sql="insert into perform_only_write"
-						+ "(db_type,batch_id,target_devices_per,"
-						+ "target_lines_per,actual_lines_per,operate_time) values(?,?,?,?,?,?)";
-				Object[] params={1,BizUtils.getBatchId(),i+1,points.size(),points.size()*1000/costTime,new Timestamp(beginTime)};
-				BizUtils.insertBySqlAndParam(sql, params);
-				System.out.println(points.size()+":"+(points.size()*1000/costTime)+" points/s");
 			}
 		}
 	}
@@ -149,8 +156,8 @@ public class OnlineService implements BaseOnlineService{
 						public void run() {
 							List<String> sensors=new ArrayList<String>();
 							sensors.add("s1");
-							sensors.add("s2");
-							sensors.add("s3");
+							sensors.add("s10");
+							sensors.add("s100");
 							long sumcost=0;
 							for(int k=0;k<10;k++){
 								long beginTime=System.currentTimeMillis();

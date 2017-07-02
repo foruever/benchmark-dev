@@ -89,7 +89,7 @@ public class InfluxdbDao implements BaseDao {
 	@Override
 	public List<Object> selectPointsByTime(Date beginTime, Date endTime,
 			String device, String sensor) {
-		String sql="select s1 from fengche1 limit 10 ";
+		String sql="select s1,s10,s100 from fengche1 limit 10 ";
 		Query query=new Query(sql,"ruc_benchmark");
 		try {
 			QueryResult qr = influxDB.query(query);
