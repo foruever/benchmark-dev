@@ -63,7 +63,7 @@ public class InitManager {
 			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(Devices.class,Device.class,SensorConf.class,Tag.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
-			object2 = unmarshaller.unmarshal(new File(path+"/classes/device.xml"));
+			object2 = unmarshaller.unmarshal(new File(path+"/conf/device.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,7 +78,7 @@ public class InitManager {
 			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(GenerateOffline.class,Database.class,DeviceConf.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
-			object3 = unmarshaller.unmarshal(new File(path+"/classes/generate-offline.xml"));
+			object3 = unmarshaller.unmarshal(new File(path+"/conf/generate-offline.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,7 +92,7 @@ public class InitManager {
 			String path =System.getProperty("user.dir");
 			JAXBContext context = JAXBContext.newInstance(GenerateOnline.class,Database.class,DeviceConf.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller(); 
-			object4 = unmarshaller.unmarshal(new File(path+"/classes/generate-online.xml"));
+			object4 = unmarshaller.unmarshal(new File(path+"/conf/generate-online.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

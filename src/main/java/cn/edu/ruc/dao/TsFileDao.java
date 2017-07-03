@@ -56,16 +56,16 @@ public class TsFileDao implements BaseDao {
 	}
 
 	@Override
-	public List<Object> selectPointsByTime(Date beginTime, Date endTime,
+	public long selectPointsByTime(Date beginTime, Date endTime,
 			String device, String sensor) {
-		return null;
+		return -1;
 	}
 
 	@Override
-	public Object selectMaxByTimeAndDevice(String sqlId, Date beginTime, Date endTime, String device,
+	public long selectMaxByTimeAndDevice(String sqlId, Date beginTime, Date endTime, String device,
 			List<String> sensors) {
 		// TODO Auto-generated method stub
-		return null;
+		return -1;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDB.ConsistencyLevel;
 import org.influxdb.InfluxDBFactory;
@@ -48,8 +49,8 @@ public class InfluxdbDao implements BaseDao {
 	public long insertMultiPoints(List<BenchmarkPoint> points) {
 		okhttp3.OkHttpClient.Builder cbuilder = new OkHttpClient.Builder();//FIXME okHttp 设置超时时间
 		cbuilder.connectTimeout(10, TimeUnit.SECONDS).writeTimeout(600, TimeUnit.SECONDS).readTimeout(600, TimeUnit.SECONDS);
-		InfluxDB influxDB = InfluxDBFactory.connect("http://10.77.110.224:8086",cbuilder);//FIXME URL 
-//		InfluxDB influxDB = InfluxDBFactory.connect("http://114.115.137.143:8086",cbuilder);//FIXME URL 
+//		InfluxDB influxDB = InfluxDBFactory.connect("http://10.77.110.224:8086",cbuilder);//FIXME URL 
+		InfluxDB influxDB = InfluxDBFactory.connect("http://114.115.137.143:8086",cbuilder);//FIXME URL 
 //		InfluxDB influxDB = InfluxDBFactory.connect("http://192.168.254.132:8086",cbuilder);//FIXME URL 
 		String dbName = "benchmark_perform";  
 		influxDB.createDatabase(dbName);  
@@ -87,17 +88,27 @@ public class InfluxdbDao implements BaseDao {
 		return false;
 	}
 	@Override
-	public List<Object> selectPointsByTime(Date beginTime, Date endTime,
+	public long selectPointsByTime(Date beginTime, Date endTime,
 			String device, String sensor) {
-		String sql="select s1 from fengche1 limit 10 ";
+		okhttp3.OkHttpClient.Builder cbuilder = new OkHttpClient.Builder();//FIXME okHttp 设置超时时间
+		cbuilder.connectTimeout(10, TimeUnit.SECONDS).writeTimeout(600, TimeUnit.SECONDS).readTimeout(600, TimeUnit.SECONDS);
+//		InfluxDB influxDB = InfluxDBFactory.connect("http://10.77.110.224:8086",cbuilder);//FIXME URL 
+		InfluxDB influxDB = InfluxDBFactory.connect("http://114.115.137.143:8086",cbuilder);//FIXME URL 
+//		InfluxDB influxDB = InfluxDBFactory.connect("http://192.168.254.132:8086",cbuilder);//FIXME URL 
+		String sql="select s1,s10,s100 from point where device='tuolaji1' and time>='2017-06-01 00:00:00' and time <='2017-06-01 00:00:00' ";
 		Query query=new Query(sql,"ruc_benchmark");
+		QueryResult qr=null;
+		long exeStartTime=System.currentTimeMillis();
 		try {
-			QueryResult qr = influxDB.query(query);
+			qr = influxDB.query(query);
 		} catch (Exception e) {
-//			System.out.println("--");
+			e.printStackTrace();
+			return -1;
 		}
-//		System.out.println(qr);
-		return null;
+		long exeEndTime=System.currentTimeMillis();
+		System.out.println(qr);
+		influxDB.close();
+		return exeEndTime-exeStartTime;
 	}
 	private static long beginTime;
 	private static long count=0;
@@ -141,8 +152,12 @@ public class InfluxdbDao implements BaseDao {
 		}
 	}
 	@Override
-	public Object selectMaxByTimeAndDevice(String sqlId, Date beginTime, Date endTime, String device,
+	public long selectMaxByTimeAndDevice(String sqlId, Date beginTime, Date endTime, String device,
 			List<String> sensors) {
+		okhttp3.OkHttpClient.Builder cbuilder = new OkHttpClient.Builder();//FIXME okHttp 设置超时时间
+		cbuilder.connectTimeout(10, TimeUnit.SECONDS).writeTimeout(600, TimeUnit.SECONDS).readTimeout(600, TimeUnit.SECONDS);//FIXME 设置超时时间
+//		InfluxDB influxDB = InfluxDBFactory.connect("http://10.77.110.224:8086",cbuilder);//FIXME URL 
+		InfluxDB influxDB = InfluxDBFactory.connect("http://114.115.137.143:8086",cbuilder);//FIXME URL 
 		StringBuilder sc=new StringBuilder();
 		sc.append("select ");
 		for(int i=0;i<sensors.size();i++){
@@ -157,12 +172,24 @@ public class InfluxdbDao implements BaseDao {
 		sc.append(" from ");
 		sc.append(device);
 		sc.append(" where time>='2017-06-01 00:00:00' and time< '2017-06-02 00:00:00' ");
+		if(StringUtils.isNotBlank(device)){
+			sc.append(" and device='"+device+"'");
+		}
 		sc.append(" group by time(1h)");
+		sc.append(",device");//FIXME 需要在真实环境测试下结果
 		Query query=new Query(sc.toString(),"ruc_benchmark");
 //		System.out.println(sc.toString());
-		QueryResult qr = influxDB.query(query);
+		long exeStartTime=System.currentTimeMillis();
+		try {
+			QueryResult qr = influxDB.query(query);
+			influxDB.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		long exeEndTime=System.currentTimeMillis();
 //		System.out.println(qr);
-		return null;
+		return exeEndTime-exeStartTime;
 	}
 
 

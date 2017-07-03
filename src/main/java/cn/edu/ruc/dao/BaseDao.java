@@ -31,7 +31,7 @@ public interface BaseDao {
 	/**
 	 * 3,由开始时间戳和结束时间戳查询，对应时间段，指定设备，指定采集点的数据集
 	 */
-	List<Object> selectPointsByTime(Date beginTime,Date endTime,String device,String sensor);
+	long selectPointsByTime(Date beginTime,Date endTime,String device,String sensor);
 	
 	/*===================simple end start==================*/
 	
@@ -40,7 +40,7 @@ public interface BaseDao {
 	/**
 	 * 4,聚合分析指定设备，指定采集点的，某一时间段的最大值，分组 一个小时，一天，一个星期，一个月
 	 */
-	Object selectMaxByTimeAndDevice(String sqlId,Date beginTime,Date endTime,String device,List<String> sensors);
+	long selectMaxByTimeAndDevice(String sqlId,Date beginTime,Date endTime,String device,List<String> sensors);
 	
 	/*===================aggregation query end==================*/
 	
