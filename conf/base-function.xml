@@ -15,16 +15,19 @@
 	<function id="float-mono" data-type="float" function-type="mono"></function>
 	<function id="float-random" data-type="float" function-type="random"></function>
 	<function id="float-square" data-type="float" function-type="square"></function>
+	<function id="float-mono-k" data-type="float" function-type="mono-k"></function><!-- 没有周期的单调函数 -->
 	
 	<function id="double-sin" data-type="double" function-type="sin"></function>
 	<function id="double-mono" data-type="double" function-type="mono"></function>
 	<function id="double-random" data-type="double" function-type="random"></function>
 	<function id="double-square" data-type="double" function-type="square"></function>
+	<function id="double-mono-k" data-type="double" function-type="mono-k"></function>
 	
 	<function id="int-sin" data-type="int" function-type="sin"></function>
 	<function id="int-mono" data-type="int" function-type="mono" ></function>
 	<function id="int-random" data-type="int" function-type="random" ></function>
 	<function id="int-square" data-type="int" function-type="square" ></function>
+	<function id="int-mono-k" data-type="int" function-type="mono-k" ></function>
 	
 	<function id="boolean-random" data-type="boolean"></function>
 </functions>

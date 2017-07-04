@@ -17,4 +17,25 @@
 	<sensor id="v1" function-ref-id="boolean-random" max="100" min="15"></sensor>
 	<sensor id="mileage1" function-ref-id="int-mono" max="100" min="15" cycle="86400"></sensor>
 	<sensor id="mileage2" function-ref-id="int-square" max="100" min="0" cycle="86400"></sensor>
+	
+	
+	<!-- 真实数据配置 傅里叶:线性:分段:随机=6:9:3:9:145 -->
+	<!-- 线性 无周期 9个方法-->
+	<sensor id="monok1" function-ref-id="double-mono-k" max="17376.5" min="17366.5" cycle="35000"></sensor>
+	<sensor id="monok2" function-ref-id="double-mono-k" max="33919.6" min="33909.6" cycle="35000"></sensor>
+	<sensor id="monok3" function-ref-id="double-mono-k" max="35061" min="35051" cycle="35000"></sensor>
+	<sensor id="monok4" function-ref-id="double-mono-k" max="35061" min="35051" cycle="35000"></sensor>
+	<sensor id="monok5" function-ref-id="double-mono-k" max="6001" min="6000" cycle="42000"></sensor>
+	<sensor id="monok6" function-ref-id="double-mono-k" max="6001" min="6000" cycle="42000"></sensor>
+	<sensor id="monok7" function-ref-id="double-mono-k" max="34704.8" min="33909.7" cycle="700000"></sensor>
+	<sensor id="monok8" function-ref-id="double-mono-k" max="33695.1" min="33501" cycle="700000"></sensor>
+	<sensor id="monok9" function-ref-id="double-mono-k" max="34041.5" min="33847.4" cycle="700000"></sensor>
+	
+		<!-- 傅里叶函数 6个方法  都可以转换为正弦函数-->
+	<sensor id="sin1" function-ref-id="double-sin" max="6.59887" min="3.54113" cycle="1754.3796"></sensor>
+	<sensor id="sin2" function-ref-id="double-sin" max="6.65208" min="3.59392" cycle="1757.1833"></sensor>
+	<sensor id="sin3" function-ref-id="double-sin" max="6.53903" min="3.26297" cycle="1802.5532"></sensor>
+	<sensor id="sin4" function-ref-id="double-sin" max="6.59887" min="3.54113" cycle="1754.3796"></sensor>
+	<sensor id="sin5" function-ref-id="double-sin" max="6.65208" min="3.59392" cycle="1757.1833"></sensor>
+	<sensor id="sin6" function-ref-id="double-sin" max="6.34178" min="3.46022" cycle="1799.6030"></sensor>
 </sensors>

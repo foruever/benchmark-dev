@@ -542,7 +542,8 @@
 			<tag key="city" value="taiyuan"></tag>
 		</nametags>
 		<sensors>
-			<sensor name="s2" sensor-ref-id="t2" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00" step="50000"></sensor>
+<!-- 			<sensor name="s2" sensor-ref-id="t2" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00" step="50000"></sensor> -->
+			<sensor name="monok1s1" sensor-ref-id="monok1" begin-time="2017-06-01 00:00:00" end-time="2017-07-01 00:00:00" step="57000"></sensor>
 		</sensors>
 	</device>
 </config>

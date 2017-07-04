@@ -1,9 +1,13 @@
 package cn.edu.ruc.function;
 
+import java.util.Date;
 import java.util.Random;
+
+import cn.edu.ruc.utils.DateUtil;
 
 public class Function {
 	private final static double[] ABNORMAL_RATE={0.005,0.01,0.1,0.15,0.2};
+	private final static long RELATIVE_ZERO_TIME=DateUtil.datastr2Date("2016-01-13 00:00:00").getTime();
 	/**
 	 * 获取带有噪点的值,并且带浮动值，上下浮动value*0.005
 	 * @param value
@@ -27,6 +31,18 @@ public class Function {
 	private static double getMonoValue(double max,double min,double cycle,long currentTime){
 		double k=(max-min)/(cycle*1000);
 		return k*(currentTime%1000000);
+	}
+	/**
+	 * 获取单调函数浮点值
+	 * @param max 最大值
+	 * @param min 最小值
+	 * @param cycle 周期，单位为s
+	 * @param currentTime 当前时间 单位为ms
+	 * @return
+	 */
+	private static double getMonoKValue(double max,double min,double cycle,long currentTime){
+		double k=(max-min)/(cycle);
+		return min+k*currentTime/1000;
 	}
 	/**
 	 * 
@@ -94,6 +110,8 @@ public class Function {
 	}
 	public static Number getValueByFuntionidAndParam(String functionId,Double max,Double min,
 			long cycle,Long currentTime){
+		
+		currentTime=currentTime-RELATIVE_ZERO_TIME;
 		if("float-sin".equals(functionId)){
 			return (float)getSineValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
 		}
@@ -105,6 +123,10 @@ public class Function {
 		}
 		if("float-square".equals(functionId)){
 			return (float)getSquareValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
+		}
+		
+		if("float-mono-k".equals(functionId)){
+			return (float)getMonoKValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
 		}
 		
 		if("double-sin".equals(functionId)){
@@ -119,6 +141,9 @@ public class Function {
 		if("double-square".equals(functionId)){
 			return getSquareValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
 		}
+		if("double-mono-k".equals(functionId)){
+			return getMonoKValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
+		}
 		
 		if("int-sin".equals(functionId)){
 			return (int)getSineValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
@@ -131,6 +156,9 @@ public class Function {
 		}
 		if("int-square".equals(functionId)){
 			return (int)getSquareValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
+		}
+		if("int-mono-k".equals(functionId)){
+			return (int)getMonoKValue(max.doubleValue(), min.doubleValue(), cycle, currentTime);
 		}
 		
 		return 0;
