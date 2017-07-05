@@ -171,6 +171,7 @@ public class InitManager {
 								sensor.setId(sc.getSensorRefId());
 								Sensor cSensor= getSensorById(sc.getSensorRefId());
 								try {
+//									System.out.println(cSensor.getId());
 									BeanUtils.copyProperties(sensor, cSensor);
 								} catch (Exception e) {
 									e.printStackTrace();

@@ -3,8 +3,8 @@
  	<database type="influxdb">
 		<devices>
 <!-- 			<device device-ref-id="fengche1"></device> -->
-<!-- 			<device device-ref-id="tuolaji1"></device> -->
-			<device device-ref-id="d1"></device>
+			<device device-ref-id="tuolaji1"></device>
+<!-- 			<device device-ref-id="d1"></device> -->
 		</devices>
 	</database> 
 	 <database type="opentsdb">
