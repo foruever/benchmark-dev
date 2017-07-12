@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
- 	<database type="influxdb">
+ 	<database type="influxdb" >
 		<devices>
 			<device device-ref-id="tuolaji1" ></device>
 		</devices>

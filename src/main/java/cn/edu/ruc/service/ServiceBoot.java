@@ -24,20 +24,20 @@ public class ServiceBoot {
 		//FIXME 后期加判断
 		if(RunModeEnum.OFFLINE_MODE.getName().equals(runMode)){
 			OffLineService offLine=new OffLineService();
-//			offLine.generateData();
-			System.out.println("我是离线生成数据");
+			offLine.generateData();
+			System.out.println("离线生成数据");
 		}
 		
 		if(RunModeEnum.PERFORM_TEST.getName().equals(runMode)){
 			//在线模式 性能测试   首先导入一个月的数据
-			System.out.println("我是在线生成数据");
+			System.out.println("在线生成数据");
 			OnlineService online=new OnlineService();
 //			每秒进去的数据量，通过加设备，怪怪的
-//			online.insertPerform();
-//			online.singleSimpleQueryPerform();
-//			online.singleAggregatePerform();
-//			online.multiStableInsertAndQueryPerform();
-//			online.multiStableQueryAndInsertPerform();
+			online.insertPerform();
+			online.singleSimpleQueryPerform();
+			online.singleAggregatePerform();
+			online.multiStableInsertAndQueryPerform();
+			online.multiStableQueryAndInsertPerform();
 		}
 	}
 	private static String RUN_MODE;

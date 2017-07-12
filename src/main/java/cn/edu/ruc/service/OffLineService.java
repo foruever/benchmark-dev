@@ -26,7 +26,7 @@ public class OffLineService implements BaseOffLineService {
 	@Override
 	public boolean generateData() {
 		OfflineConfig offLineConfig = InitManager.getOfflineConfig();
-		String path = getClass().getClassLoader().getResource("").getPath();
+		String path = System.getProperty("user.dir");
 		String baseConfPath=path+"/data";
 		return generateData(baseConfPath);
 	}
